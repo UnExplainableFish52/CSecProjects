@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1: Introduction to Cybersecurity | Cybersecurity Beginner Course</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-bottom: 3px solid #00bcd4;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #00bcd4;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            color: #8b949e;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: rgba(0, 188, 212, 0.1);
+            border-left: 4px solid #00bcd4;
+            padding: 30px;
+            margin-bottom: 50px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .welcome-section h2 {
+            color: #00bcd4;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* Learning Outcomes */
+        .learning-outcomes {
+            margin-top: 25px;
+        }
+
+        .learning-outcomes h3 {
+            color: #fff;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .learning-outcomes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .learning-outcomes li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            color: #e6edf3;
+        }
+
+        .learning-outcomes li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+
+        /* Module Cards Grid */
+        .modules-title {
+            text-align: center;
+            color: #00bcd4;
+            font-size: 2em;
+            margin-bottom: 40px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .module-card {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            border: 2px solid #30363d;
+            border-radius: 16px;
+            padding: 35px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            border-color: #00bcd4;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 188, 212, 0.25);
+        }
+
+        .module-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            color: #000;
+            font-weight: bold;
+            font-size: 0.9em;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .module-card h3 {
+            color: #ffd700;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .module-card p {
+            color: #8b949e;
+            font-size: 1em;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .module-topics {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #30363d;
+        }
+
+        .module-topics span {
+            display: inline-block;
+            background: rgba(78, 201, 176, 0.15);
+            color: #4ec9b0;
+            font-size: 0.8em;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin: 3px;
+        }
+
+        .arrow-icon {
+            display: block;
+            text-align: right;
+            margin-top: 20px;
+            color: #00bcd4;
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover .arrow-icon {
+            transform: translateX(8px);
+        }
+
+        /* Prerequisites */
+        .prerequisites {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 50px;
+        }
+
+        .prerequisites h3 {
+            color: #ffd700;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .prerequisites p {
+            color: #e6edf3;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 3px solid #00bcd4;
+            margin-top: 60px;
+        }
+
+        footer p {
+            color: #8b949e;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #00bcd4;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 2px solid #00bcd4;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            background: #00bcd4;
+            color: #0d1117;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .module-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Module 1: Introduction to Cybersecurity</h1>
+            <p class="subtitle">Your Journey From Zero to Job-Ready Starts Here</p>
+            <p class="tagline">Master the fundamentals that every cybersecurity professional needs</p>
+        </header>
+
+        <section class="welcome-section">
+            <h2>👋 Welcome, Future Cybersecurity Professional!</h2>
+            <p>
+                Congratulations on taking your first step into the world of <span class="highlight">cybersecurity</span>! 
+                This module is designed for <span class="highlight">complete beginners</span> with no prior knowledge. 
+                By the end of this module, you'll understand the core concepts, terminology, and landscape of cybersecurity.
+            </p>
+            <p>
+                Whether you want to become a <span class="highlight">SOC Analyst</span>, <span class="highlight">Penetration Tester</span>, 
+                or <span class="highlight">Security Engineer</span>, this foundational knowledge is essential for your career.
+            </p>
+
+            <div class="learning-outcomes">
+                <h3>🎯 What You'll Learn:</h3>
+                <ul>
+                    <li>What cybersecurity is and why it matters in today's digital world</li>
+                    <li>The CIA Triad and AAA Framework — core security concepts</li>
+                    <li>Essential cybersecurity terminology and acronyms</li>
+                    <li>Who the attackers are and how they operate</li>
+                    <li>Different career paths available in cybersecurity</li>
+                    <li>Introduction to security frameworks and defense strategies</li>
+                </ul>
+            </div>
+        </section>
+
+        <h2 class="modules-title">📚 Module Content</h2>
+
+        <div class="modules-grid">
+            <a href="1.1-what-is-cybersecurity.html" class="module-card">
+                <span class="module-number">LESSON 1.1</span>
+                <h3>🔐 What is Cybersecurity?</h3>
+                <p>
+                    Learn the definition of cybersecurity, understand the CIA Triad and AAA Framework, 
+                    explore real-world breaches, and discover various career paths in the industry.
+                </p>
+                <div class="module-topics">
+                    <span>CIA Triad</span>
+                    <span>AAA Framework</span>
+                    <span>Breaches</span>
+                    <span>Career Paths</span>
+                </div>
+                <span class="arrow-icon">→</span>
+            </a>
+
+            <a href="1.2-glossary.html" class="module-card">
+                <span class="module-number">LESSON 1.2</span>
+                <h3>📖 Cybersecurity Glossary</h3>
+                <p>
+                    A comprehensive A-Z reference covering malware types, attack methods, security acronyms, 
+                    network terminology, and defense concepts every professional should know.
+                </p>
+                <div class="module-topics">
+                    <span>Malware</span>
+                    <span>Attacks</span>
+                    <span>Acronyms</span>
+                    <span>Network Terms</span>
+                </div>
+                <span class="arrow-icon">→</span>
+            </a>
+
+            <a href="1.3-landscape.html" class="module-card">
+                <span class="module-number">LESSON 1.3</span>
+                <h3>🌐 The Cybersecurity Landscape</h3>
+                <p>
+                    Understand who the threat actors are, their motivations, attack vectors they use, 
+                    security frameworks, defense in depth strategies, and the roles of Red/Blue/Purple teams.
+                </p>
+                <div class="module-topics">
+                    <span>Threat Actors</span>
+                    <span>Kill Chain</span>
+                    <span>MITRE ATT&CK</span>
+                    <span>Red/Blue Team</span>
+                </div>
+                <span class="arrow-icon">→</span>
+            </a>
+        </div>
+
+        <div class="prerequisites">
+            <h3>📋 Prerequisites</h3>
+            <p>
+                <strong>None!</strong> This module is designed for absolute beginners. You don't need any prior 
+                technical knowledge or experience. Just bring your curiosity and willingness to learn. 
+                We'll explain everything from the ground up.
+            </p>
+        </div>
+
+        <footer>
+            <p>Part of the <span class="highlight">Cybersecurity Beginner Course</span> at projects.saksham.bio</p>
+            <a href="../index.html" class="back-link">← Back to Main Site</a>
+        </footer>
+    </div>
+</body>
+</html>

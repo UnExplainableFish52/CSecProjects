@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.3 The Cybersecurity Landscape | Module 1 | Cybersecurity Beginner Course</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 40px;
+        }
+
+        .nav-link {
+            color: #00bcd4;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 188, 212, 0.15);
+        }
+
+        .breadcrumb {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #00bcd4;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #00bcd4;
+            font-weight: bold;
+            margin: 50px 0 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #30363d;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #fff;
+            font-weight: bold;
+            margin: 30px 0 15px;
+        }
+
+        h4 {
+            font-size: 1.15em;
+            color: #fff;
+            font-weight: bold;
+            margin: 20px 0 10px;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            font-size: 1.1em;
+        }
+
+        /* Sections */
+        .section {
+            background: rgba(22, 27, 34, 0.5);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .code-text {
+            color: #4ec9b0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: rgba(78, 201, 176, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Threat Actor Cards */
+        .actor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .actor-card {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .actor-card:hover {
+            border-color: #00bcd4;
+            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.1);
+        }
+
+        .actor-icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .actor-card h4 {
+            color: #ffd700;
+            margin-top: 0;
+        }
+
+        .actor-card p {
+            color: #8b949e;
+            font-size: 0.95em;
+        }
+
+        .actor-tags {
+            margin-top: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin: 2px;
+        }
+
+        .tag-skill {
+            background: rgba(0, 188, 212, 0.2);
+            color: #00bcd4;
+        }
+
+        .tag-motive {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .tag-threat {
+            background: rgba(233, 30, 99, 0.2);
+            color: #e91e63;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 188, 212, 0.1);
+            border-left: 4px solid #00bcd4;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example-box {
+            background: rgba(78, 201, 176, 0.1);
+            border-left: 4px solid #4ec9b0;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example-box h4 {
+            color: #4ec9b0;
+            margin-top: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+        }
+
+        th {
+            background: rgba(0, 188, 212, 0.2);
+            color: #00bcd4;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #00bcd4;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        tr:hover {
+            background: rgba(0, 188, 212, 0.05);
+        }
+
+        /* Kill Chain */
+        .kill-chain {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
+            justify-content: center;
+        }
+
+        .kill-chain-step {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            border: 2px solid #30363d;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            width: 130px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .kill-chain-step:hover {
+            border-color: #00bcd4;
+            transform: translateY(-3px);
+        }
+
+        .kill-chain-step::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00bcd4;
+            font-size: 1.2em;
+        }
+
+        .kill-chain-step:last-child::after {
+            content: "";
+        }
+
+        .step-number {
+            background: #00bcd4;
+            color: #0d1117;
+            font-weight: bold;
+            font-size: 0.8em;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+        }
+
+        .step-name {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        /* Defense Layers */
+        .defense-layers {
+            margin: 30px 0;
+        }
+
+        .layer {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .layer:hover {
+            border-color: #00bcd4;
+        }
+
+        .layer-icon {
+            font-size: 2em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .layer-content {
+            flex: 1;
+        }
+
+        .layer-content h4 {
+            color: #ffd700;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .layer-content p {
+            color: #8b949e;
+            margin-bottom: 10px;
+        }
+
+        .layer-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .layer-examples span {
+            background: rgba(78, 201, 176, 0.15);
+            color: #4ec9b0;
+            font-size: 0.8em;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* Team Cards */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .team-card {
+            background: linear-gradient(145deg, #161b22, #0d1117);
+            border: 2px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-card.red {
+            border-top: 4px solid #e91e63;
+        }
+
+        .team-card.red:hover {
+            border-color: #e91e63;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.2);
+        }
+
+        .team-card.blue {
+            border-top: 4px solid #2196f3;
+        }
+
+        .team-card.blue:hover {
+            border-color: #2196f3;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.2);
+        }
+
+        .team-card.purple {
+            border-top: 4px solid #9c27b0;
+        }
+
+        .team-card.purple:hover {
+            border-color: #9c27b0;
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.2);
+        }
+
+        .team-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .team-card h4 {
+            color: #ffd700;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .team-card p {
+            color: #8b949e;
+            margin-bottom: 15px;
+        }
+
+        .team-card h5 {
+            color: #fff;
+            font-size: 0.95em;
+            margin: 15px 0 10px;
+        }
+
+        .team-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .team-card li {
+            padding: 5px 0;
+            color: #e6edf3;
+            font-size: 0.9em;
+        }
+
+        .tool-tag {
+            display: inline-block;
+            background: rgba(78, 201, 176, 0.15);
+            color: #4ec9b0;
+            font-size: 0.8em;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin: 3px;
+        }
+
+        /* Framework Box */
+        .framework-box {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .framework-box h4 {
+            color: #00bcd4;
+            margin-bottom: 15px;
+        }
+
+        /* Page Navigation */
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #30363d;
+        }
+
+        .page-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00bcd4;
+            text-decoration: none;
+            padding: 15px 25px;
+            border: 2px solid #30363d;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .page-nav a:hover {
+            border-color: #00bcd4;
+            background: rgba(0, 188, 212, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid #30363d;
+            color: #8b949e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .kill-chain {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .kill-chain-step {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .kill-chain-step::after {
+                content: "↓";
+                right: 50%;
+                top: auto;
+                bottom: -15px;
+                transform: translateX(50%);
+            }
+
+            .layer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .page-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-nav a {
+                width: 100%;
+                justify-content: center;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="index.html" class="nav-link">← Back to Module 1</a>
+            <span class="breadcrumb"><a href="index.html">Module 1</a> / Lesson 1.3</span>
+        </nav>
+
+        <header>
+            <h1>🌐 1.3 The Cybersecurity Landscape</h1>
+            <p class="subtitle">Understanding who attacks, why they attack, and how we defend</p>
+        </header>
+
+        <!-- Threat Actors Section -->
+        <h2>👤 Threat Actors — Who Attacks?</h2>
+
+        <div class="section">
+            <p>
+                Understanding <span class="highlight">who</span> poses a threat is the first step in building effective defenses. 
+                Threat actors vary widely in their skills, resources, and motivations. Let's explore the different types:
+            </p>
+
+            <div class="actor-grid">
+                <div class="actor-card">
+                    <div class="actor-icon">👶</div>
+                    <h4>Script Kiddies</h4>
+                    <p>
+                        Inexperienced attackers who use pre-made tools and scripts without understanding how they work. 
+                        Often motivated by curiosity, fame, or just causing mischief.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Low Skill</span>
+                        <span class="tag tag-motive">Curiosity</span>
+                        <span class="tag tag-threat">Low Threat</span>
+                    </div>
+                </div>
+
+                <div class="actor-card">
+                    <div class="actor-icon">✊</div>
+                    <h4>Hacktivists</h4>
+                    <p>
+                        Attackers motivated by political or social causes. Use hacking to promote their ideology, 
+                        expose information, or disrupt organizations they oppose.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Low-Medium Skill</span>
+                        <span class="tag tag-motive">Ideology</span>
+                        <span class="tag tag-threat">Medium Threat</span>
+                    </div>
+                </div>
+
+                <div class="actor-card">
+                    <div class="actor-icon">💰</div>
+                    <h4>Cybercriminals</h4>
+                    <p>
+                        Attackers motivated by financial gain. Operate like businesses, with specialized roles. 
+                        Deploy ransomware, steal data for sale, conduct fraud and extortion.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Medium-High Skill</span>
+                        <span class="tag tag-motive">Financial</span>
+                        <span class="tag tag-threat">High Threat</span>
+                    </div>
+                </div>
+
+                <div class="actor-card">
+                    <div class="actor-icon">🏢</div>
+                    <h4>Insider Threats</h4>
+                    <p>
+                        Current or former employees, contractors, or partners with legitimate access. 
+                        Can be malicious (intentional) or negligent (accidental). Very difficult to detect.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Varies</span>
+                        <span class="tag tag-motive">Revenge/Money</span>
+                        <span class="tag tag-threat">Very High Threat</span>
+                    </div>
+                </div>
+
+                <div class="actor-card">
+                    <div class="actor-icon">🏛️</div>
+                    <h4>Nation-State Actors / APT Groups</h4>
+                    <p>
+                        State-sponsored hackers with virtually unlimited resources, advanced capabilities, and 
+                        patience. Conduct espionage, sabotage, and cyber warfare operations.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Elite Skill</span>
+                        <span class="tag tag-motive">Espionage</span>
+                        <span class="tag tag-threat">Critical Threat</span>
+                    </div>
+                </div>
+
+                <div class="actor-card">
+                    <div class="actor-icon">🏭</div>
+                    <h4>Competitors</h4>
+                    <p>
+                        Business rivals engaging in corporate espionage to steal trade secrets, customer lists, 
+                        pricing strategies, or proprietary technology for competitive advantage.
+                    </p>
+                    <div class="actor-tags">
+                        <span class="tag tag-skill">Medium Skill</span>
+                        <span class="tag tag-motive">Business Intel</span>
+                        <span class="tag tag-threat">High Threat</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>Notable APT Groups</h4>
+                <ul>
+                    <li><span class="highlight">APT29 (Cozy Bear)</span> — Russian group behind SolarWinds attack</li>
+                    <li><span class="highlight">APT41</span> — Chinese group conducting espionage and financial crimes</li>
+                    <li><span class="highlight">Lazarus Group</span> — North Korean group, Sony hack, WannaCry ransomware</li>
+                    <li><span class="highlight">APT28 (Fancy Bear)</span> — Russian military intelligence (GRU)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Motivations Section -->
+        <h2>💭 Motivations — Why They Attack</h2>
+
+        <div class="section">
+            <p>
+                Understanding <span class="highlight">why</span> attackers target systems helps predict their behavior 
+                and prioritize defenses. Different motivations lead to different attack patterns.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Motivation</th>
+                        <th>Description</th>
+                        <th>Typical Targets</th>
+                        <th>Attack Methods</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">💵 Financial Gain</span></td>
+                        <td>Direct monetary profit through theft, extortion, or fraud</td>
+                        <td>Banks, healthcare, retail, any organization with valuable data</td>
+                        <td>Ransomware, credit card theft, business email compromise</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🕵️ Espionage</span></td>
+                        <td>Stealing state secrets, military intel, or intellectual property</td>
+                        <td>Government, defense contractors, research institutions, tech companies</td>
+                        <td>APT campaigns, spear phishing, supply chain attacks</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">✊ Ideology</span></td>
+                        <td>Promoting political/social causes, making statements</td>
+                        <td>Governments, corporations, controversial organizations</td>
+                        <td>Website defacement, DDoS, data leaks</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">😠 Revenge</span></td>
+                        <td>Retaliation for perceived wrongs, often by insiders</td>
+                        <td>Former employers, specific individuals</td>
+                        <td>Data destruction, sabotage, data leaks</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🏆 Challenge/Fame</span></td>
+                        <td>Proving technical skills, gaining recognition in hacker communities</td>
+                        <td>"High-value" targets for bragging rights</td>
+                        <td>Varies, often public disclosure of exploits</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>💡 Key Insight:</strong> Most attacks are financially motivated. According to Verizon's Data Breach 
+                Investigation Report, <span class="highlight">86%</span> of breaches are financially motivated. This is why 
+                ransomware has become so prevalent — it's simply very profitable for criminals.
+            </div>
+        </div>
+
+        <!-- Attack Vectors Section -->
+        <h2>🎯 Attack Vectors — How Attacks Happen</h2>
+
+        <div class="section">
+            <p>
+                An <span class="highlight">attack vector</span> is the path or method an attacker uses to gain access 
+                to a target system. Understanding these vectors helps organizations build layered defenses.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vector</th>
+                        <th>How It Works</th>
+                        <th>Real Examples</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">📧 Email</span></td>
+                        <td>Phishing emails with malicious attachments (PDFs, Office docs with macros) or links to credential harvesting sites</td>
+                        <td>91% of cyberattacks start with phishing email</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🌐 Web</span></td>
+                        <td>Drive-by downloads from compromised/malicious websites, browser exploits, malvertising</td>
+                        <td>Watering hole attacks targeting specific industries</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">💾 Removable Media</span></td>
+                        <td>Infected USB drives, external hard drives left in public places or sent as "gifts"</td>
+                        <td>Stuxnet spread via USB to air-gapped Iranian nuclear facilities</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🗣️ Social Engineering</span></td>
+                        <td>Manipulating humans through phone calls, in-person interactions, pretexting</td>
+                        <td>2020 Twitter hack — employees tricked into providing credentials</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🔗 Supply Chain</span></td>
+                        <td>Compromising software vendors to distribute malware through legitimate updates</td>
+                        <td>SolarWinds attack compromised 18,000+ organizations</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">🚪 Physical Access</span></td>
+                        <td>Direct access to facilities, servers, or devices through tailgating, social engineering, or breaking in</td>
+                        <td>Installing hardware keyloggers, evil maid attacks</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ The Human Factor:</strong> People are often called the "weakest link" in security. Technical 
+                controls can be bypassed when employees are tricked. This is why <span class="highlight">security awareness 
+                training</span> is essential — even the best technical defenses can be circumvented by social engineering.
+            </div>
+        </div>
+
+        <!-- Frameworks Section -->
+        <h2>📋 Security Frameworks Introduction</h2>
+
+        <div class="section">
+            <h3>🔪 Cyber Kill Chain</h3>
+            <p>
+                Developed by Lockheed Martin, the <span class="highlight">Cyber Kill Chain</span> describes the stages 
+                of a cyberattack from initial reconnaissance to achieving objectives. Understanding this framework 
+                helps defenders identify and disrupt attacks at any stage.
+            </p>
+
+            <div class="kill-chain">
+                <div class="kill-chain-step">
+                    <div class="step-number">1</div>
+                    <div class="step-name">Recon</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">2</div>
+                    <div class="step-name">Weaponize</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">3</div>
+                    <div class="step-name">Delivery</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">4</div>
+                    <div class="step-name">Exploit</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">5</div>
+                    <div class="step-name">Install</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">6</div>
+                    <div class="step-name">C2</div>
+                </div>
+                <div class="kill-chain-step">
+                    <div class="step-number">7</div>
+                    <div class="step-name">Actions</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stage</th>
+                        <th>Attacker Activity</th>
+                        <th>Defender Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">1. Reconnaissance</span></td>
+                        <td>Research target: OSINT, port scanning, identifying vulnerabilities</td>
+                        <td>Minimize public info, web scraping detection, log analysis</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">2. Weaponization</span></td>
+                        <td>Create malicious payload (malware + exploit)</td>
+                        <td>Threat intelligence, vulnerability management</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">3. Delivery</span></td>
+                        <td>Send weapon to target (email, web, USB)</td>
+                        <td>Email filtering, web proxy, endpoint protection</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">4. Exploitation</span></td>
+                        <td>Trigger vulnerability to execute code</td>
+                        <td>Patch management, DEP, ASLR, application whitelisting</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">5. Installation</span></td>
+                        <td>Install persistent backdoor/malware</td>
+                        <td>EDR, AV, file integrity monitoring, HIDS</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">6. Command & Control</span></td>
+                        <td>Establish communication with attacker infrastructure</td>
+                        <td>Network monitoring, DNS filtering, firewall egress rules</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">7. Actions on Objectives</span></td>
+                        <td>Achieve goal: data theft, destruction, ransomware</td>
+                        <td>Data loss prevention, network segmentation, incident response</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🎯 MITRE ATT&CK Framework</h3>
+            <p>
+                <span class="highlight">MITRE ATT&CK</span> (Adversarial Tactics, Techniques, and Common Knowledge) is a 
+                comprehensive knowledge base of adversary tactics and techniques based on real-world observations. 
+                It's used for threat modeling, detection engineering, and red team exercises.
+            </p>
+
+            <div class="framework-box">
+                <h4>ATT&CK Structure</h4>
+                <ul>
+                    <li><span class="highlight">Tactics:</span> The "why" — the adversary's goal (e.g., Initial Access, Persistence, Exfiltration)</li>
+                    <li><span class="highlight">Techniques:</span> The "how" — specific methods to achieve tactics (e.g., Phishing, Registry Run Keys)</li>
+                    <li><span class="highlight">Sub-techniques:</span> More granular variations of techniques</li>
+                    <li><span class="highlight">Procedures:</span> Specific implementations by threat actors</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Why ATT&CK Matters:</strong> ATT&CK provides a common language for security teams to describe 
+                adversary behavior. It helps organizations:
+                <ul>
+                    <li>Identify gaps in detection capabilities</li>
+                    <li>Prioritize security investments based on real threats</li>
+                    <li>Map threat intelligence to specific techniques</li>
+                    <li>Conduct realistic red team exercises</li>
+                </ul>
+                <p style="margin-top: 10px;">
+                    Explore the full framework at: <span class="code-text">attack.mitre.org</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Defense in Depth Section -->
+        <h2>🏰 Defense in Depth (Castle Analogy)</h2>
+
+        <div class="section">
+            <p>
+                <span class="highlight">Defense in Depth</span> is a security strategy that employs multiple layers of 
+                defense so that if one layer fails, others are in place. Think of it like a medieval castle — you don't 
+                rely on just the outer wall; you have moats, inner walls, towers, and guards.
+            </p>
+
+            <div class="info-box">
+                <strong>💡 Core Principle:</strong> No single security control is perfect. By layering multiple defenses, 
+                you create <span class="highlight">redundancy</span> — an attacker must bypass multiple barriers to succeed. 
+                Each layer increases the time, effort, and likelihood of detection.
+            </div>
+
+            <h3>Security Layers</h3>
+
+            <div class="defense-layers">
+                <div class="layer">
+                    <div class="layer-icon">🏢</div>
+                    <div class="layer-content">
+                        <h4>Physical Security</h4>
+                        <p>The outermost layer — protecting physical access to facilities and hardware.</p>
+                        <div class="layer-examples">
+                            <span>Access badges</span>
+                            <span>Security guards</span>
+                            <span>CCTV cameras</span>
+                            <span>Locked server rooms</span>
+                            <span>Biometric access</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-icon">🌐</div>
+                    <div class="layer-content">
+                        <h4>Network Security</h4>
+                        <p>Protecting the network infrastructure and controlling traffic flow.</p>
+                        <div class="layer-examples">
+                            <span>Firewalls</span>
+                            <span>IDS/IPS</span>
+                            <span>VPNs</span>
+                            <span>Network segmentation</span>
+                            <span>DMZ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-icon">💻</div>
+                    <div class="layer-content">
+                        <h4>Endpoint Security</h4>
+                        <p>Protecting individual devices (laptops, desktops, servers, mobile).</p>
+                        <div class="layer-examples">
+                            <span>Antivirus/EDR</span>
+                            <span>Host firewall</span>
+                            <span>Disk encryption</span>
+                            <span>Patch management</span>
+                            <span>USB controls</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-icon">📱</div>
+                    <div class="layer-content">
+                        <h4>Application Security</h4>
+                        <p>Securing software and applications from vulnerabilities.</p>
+                        <div class="layer-examples">
+                            <span>WAF</span>
+                            <span>Code review</span>
+                            <span>Input validation</span>
+                            <span>SAST/DAST</span>
+                            <span>Penetration testing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-icon">🗄️</div>
+                    <div class="layer-content">
+                        <h4>Data Security</h4>
+                        <p>Protecting the data itself, regardless of where it resides.</p>
+                        <div class="layer-examples">
+                            <span>Encryption at rest</span>
+                            <span>Encryption in transit</span>
+                            <span>DLP</span>
+                            <span>Data classification</span>
+                            <span>Backups</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-icon">👤</div>
+                    <div class="layer-content">
+                        <h4>User Security</h4>
+                        <p>The human layer — training and policies for people.</p>
+                        <div class="layer-examples">
+                            <span>Security awareness</span>
+                            <span>Phishing simulations</span>
+                            <span>Password policies</span>
+                            <span>MFA</span>
+                            <span>Least privilege</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-box">
+                <h4>Castle Analogy in Action</h4>
+                <p>Imagine an attacker trying to breach a medieval castle:</p>
+                <ol>
+                    <li><strong>Moat</strong> (Network Perimeter) — Firewall blocks initial attack</li>
+                    <li><strong>Outer Wall</strong> (IDS/IPS) — Detects the attacker climbing over</li>
+                    <li><strong>Inner Wall</strong> (Segmentation) — Limits attacker's movement</li>
+                    <li><strong>Guards</strong> (EDR/SOC) — Actively hunt and respond</li>
+                    <li><strong>Vault</strong> (Encryption) — Even if reached, treasure is protected</li>
+                </ol>
+                <p>Each layer makes the attack harder and increases the chance of detection!</p>
+            </div>
+        </div>
+
+        <!-- Security Teams Section -->
+        <h2>🎭 Security Teams</h2>
+
+        <div class="section">
+            <p>
+                Modern security organizations often structure their teams by function. The color-coded team model helps 
+                define roles and responsibilities in offensive and defensive security operations.
+            </p>
+
+            <div class="team-grid">
+                <div class="team-card red">
+                    <div class="team-icon">🔴</div>
+                    <h4>Red Team</h4>
+                    <p>
+                        <strong>Offensive Security</strong> — Simulates real-world attackers to test defenses. 
+                        Tries to breach security controls using any means necessary, just like actual adversaries.
+                    </p>
+                    
+                    <h5>Key Activities:</h5>
+                    <ul>
+                        <li>Penetration testing</li>
+                        <li>Social engineering assessments</li>
+                        <li>Physical security testing</li>
+                        <li>Adversary emulation</li>
+                        <li>Vulnerability exploitation</li>
+                    </ul>
+                    
+                    <h5>Common Tools:</h5>
+                    <div>
+                        <span class="tool-tag">Metasploit</span>
+                        <span class="tool-tag">Cobalt Strike</span>
+                        <span class="tool-tag">Burp Suite</span>
+                        <span class="tool-tag">Nmap</span>
+                        <span class="tool-tag">BloodHound</span>
+                        <span class="tool-tag">Kali Linux</span>
+                    </div>
+                </div>
+
+                <div class="team-card blue">
+                    <div class="team-icon">🔵</div>
+                    <h4>Blue Team</h4>
+                    <p>
+                        <strong>Defensive Security</strong> — Monitors, detects, and responds to security threats. 
+                        Builds and maintains security infrastructure and processes.
+                    </p>
+                    
+                    <h5>Key Activities:</h5>
+                    <ul>
+                        <li>Security monitoring (SIEM)</li>
+                        <li>Incident response</li>
+                        <li>Threat hunting</li>
+                        <li>Log analysis</li>
+                        <li>Vulnerability management</li>
+                    </ul>
+                    
+                    <h5>Common Tools:</h5>
+                    <div>
+                        <span class="tool-tag">Splunk</span>
+                        <span class="tool-tag">QRadar</span>
+                        <span class="tool-tag">CrowdStrike</span>
+                        <span class="tool-tag">Wireshark</span>
+                        <span class="tool-tag">YARA</span>
+                        <span class="tool-tag">Velociraptor</span>
+                    </div>
+                </div>
+
+                <div class="team-card purple">
+                    <div class="team-icon">🟣</div>
+                    <h4>Purple Team</h4>
+                    <p>
+                        <strong>Collaborative Security</strong> — Bridges the gap between Red and Blue teams. 
+                        Facilitates knowledge sharing to improve both offensive and defensive capabilities.
+                    </p>
+                    
+                    <h5>Key Activities:</h5>
+                    <ul>
+                        <li>Joint exercises</li>
+                        <li>Detection engineering</li>
+                        <li>Testing detection rules</li>
+                        <li>Sharing TTPs</li>
+                        <li>Continuous improvement</li>
+                    </ul>
+                    
+                    <h5>Focus Areas:</h5>
+                    <div>
+                        <span class="tool-tag">MITRE ATT&CK mapping</span>
+                        <span class="tool-tag">Detection coverage</span>
+                        <span class="tool-tag">Tabletop exercises</span>
+                        <span class="tool-tag">Playbook development</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Team Comparison</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Red Team 🔴</th>
+                        <th>Blue Team 🔵</th>
+                        <th>Purple Team 🟣</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="highlight">Primary Goal</span></td>
+                        <td>Find weaknesses</td>
+                        <td>Detect & defend</td>
+                        <td>Improve both</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Mindset</span></td>
+                        <td>Attacker</td>
+                        <td>Defender</td>
+                        <td>Collaborator</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Approach</span></td>
+                        <td>Break things</td>
+                        <td>Fix things</td>
+                        <td>Test & validate</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Output</span></td>
+                        <td>Penetration test reports</td>
+                        <td>Detection alerts, IR reports</td>
+                        <td>Detection improvements</td>
+                    </tr>
+                    <tr>
+                        <td><span class="highlight">Success Metric</span></td>
+                        <td>Vulnerabilities found</td>
+                        <td>Threats detected/stopped</td>
+                        <td>Detection coverage %</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>💡 Career Tip:</strong> Early in your career, most people start on the Blue Team (SOC Analyst) 
+                because organizations need more defenders. As you gain experience and skills, you can specialize in 
+                Red Team (offensive) or move into Purple Team roles that require understanding of both sides.
+            </div>
+        </div>
+
+        <!-- Page Navigation -->
+        <nav class="page-nav">
+            <a href="1.2-glossary.html">
+                <span>←</span>
+                <span>Previous: Cybersecurity Glossary</span>
+            </a>
+            <a href="index.html">
+                <span>Back to Module Hub</span>
+                <span>→</span>
+            </a>
+        </nav>
+
+        <footer>
+            <p>Module 1: Introduction to Cybersecurity | Lesson 1.3</p>
+            <p>Part of the Cybersecurity Beginner Course at projects.saksham.bio</p>
+            <p style="margin-top: 20px;">
+                <strong>🎉 Congratulations!</strong> You've completed Module 1: Introduction to Cybersecurity
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
