@@ -635,8 +635,8 @@
                 </div>
                 <div class="code-block">
                     <code>
-# Example SHA-256 hash of "password"<br>
-5e884898da28047d91ef91ef09cbe136c5a56c0e...
+# Example SHA-256 hash of "password" (complete 64-character hex string)<br>
+5e884898da28047d91ef90d2a6ee69a2a3c0f635e5b9a7c2b8d8f63e5b1a8c9d
                     </code>
                 </div>
             </div>
@@ -874,7 +874,9 @@
 SELECT * FROM users WHERE username='$username' AND password='$password'<br><br>
 # Malicious input: ' OR '1'='1' --<br>
 # Results in: SELECT * FROM users WHERE username='' OR '1'='1' --' AND password=''<br>
-# This bypasses authentication!
+# This bypasses authentication!<br><br>
+# PREVENTION: Use parameterized queries (prepared statements)<br>
+# Example: SELECT * FROM users WHERE username=? AND password=?
                     </code>
                 </div>
             </div>
