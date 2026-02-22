@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSecProjects — Home</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary:    #0a0e17;
+      --bg-secondary:  #111827;
+      --bg-tertiary:   #1a2035;
+      --bg-card:       #141a2a;
+      --border:        #1e2a40;
+      --text-primary:  #e0e6ed;
+      --text-secondary:#a0aec0;
+      --accent-cyan:   #00e5ff;
+      --accent-purple: #b388ff;
+      --accent-red:    #ff4c6a;
+      --accent-yellow: #ffd600;
+      --accent-green:  #00e676;
+      --shadow:        0 4px 24px rgba(0,0,0,0.5);
+      --radius:        14px;
+      --font-sans:     'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono:     'JetBrains Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      --transition:    0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    a { color: var(--accent-cyan); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--accent-purple); }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: 100px 32px 60px;
+      background: linear-gradient(180deg, #0d142088 0%, transparent 100%);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #00e5ff, #b388ff 40%, #ff4c6a 70%, #ffd600);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 30px rgba(0,229,255,0.25));
+    }
+
+    .hero .tagline {
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      max-width: 600px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .hero .meta {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero .meta a {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--accent-cyan);
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0,229,255,0.1);
+      transition: all var(--transition);
+    }
+
+    .hero .meta a:hover {
+      background: rgba(0,229,255,0.1);
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0,229,255,0.25);
+    }
+
+    /* ===== PROJECTS GRID ===== */
+    .projects-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 28px 120px;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 32px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span {
+      color: var(--accent-cyan);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow), 0 0 30px rgba(0,229,255,0.08);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      transition: all var(--transition);
+    }
+
+    .card-link:hover {
+      color: #fff;
+      gap: 10px;
+    }
+
+    .card-link .arrow {
+      transition: transform var(--transition);
+    }
+
+    .card-link:hover .arrow {
+      transform: translateX(3px);
+    }
+
+    /* ===== COMING SOON PLACEHOLDER ===== */
+    .project-card.coming-soon {
+      border-style: dashed;
+      opacity: 0.5;
+    }
+
+    .project-card.coming-soon:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border);
+    }
+
+    .project-card.coming-soon::before {
+      display: none;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 32px;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    .footer a {
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .hero { padding: 60px 20px 40px; }
+      .projects-section { padding: 0 16px 80px; }
+      .project-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <h1>CyberSec PROJECTS</h1>
+    <p class="tagline">Cybersecurity playbooks, cheatsheets, and tools — built for learning and authorized engagements.</p>
+    <div class="meta">
+      <a href="https://github.com/UnExplainableFish52" target="_blank">👨‍💻 Built by: Loki</a>
+      <a href="https://sakshamsharma.com.np" target="_blank">🌐 sakshamsharma.com.np</a>
+      <a href="https://saksham.info.np" target="_blank">🌐 saksham.info.np</a>
+    </div>
+  </header>
+
+  <!-- ============ PROJECTS ============ -->
+  <main class="projects-section">
+    <h2 class="section-title"><span>📂</span> Projects</h2>
+
+    <div class="projects-grid">
+
+      <!-- Nmap Recon Playbook -->
+      <a href="nmap/nmap.html" class="project-card" style="text-decoration:none; color:inherit;">
+        <span class="card-icon">🛡️</span>
+        <h3 class="card-title">Nmap Recon Playbook</h3>
+        <p class="card-desc">A step-by-step, logic-driven guide for authorized network reconnaissance using Nmap — from host discovery to vulnerability scanning.</p>
+        <div class="card-tags">
+          <span class="tag">Nmap</span>
+          <span class="tag">Recon</span>
+          <span class="tag">Network</span>
+          <span class="tag">Cheatsheet</span>
+        </div>
+        <span class="card-link">Open Playbook <span class="arrow">→</span></span>
+      </a>
+
+      <!-- Coming soon placeholder -->
+      <div class="project-card coming-soon">
+        <span class="card-icon">🔜</span>
+        <h3 class="card-title">More Coming Soon</h3>
+        <p class="card-desc">Additional cybersecurity playbooks and tools will be added here. Stay tuned.</p>
+        <div class="card-tags">
+          <span class="tag">TBD</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <p>🛡️ CSecProjects — Built by <a href="https://github.com/UnExplainableFish52" target="_blank">Loki</a></p>
+  </footer>
+
+</body>
+</html>

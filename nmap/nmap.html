@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nmap Recon Playbook — Ultimate Cheatsheet</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary:    #0a0e17;
+      --bg-secondary:  #111827;
+      --bg-tertiary:   #1a2035;
+      --bg-card:       #141a2a;
+      --border:        #1e2a40;
+      --border-accent: #00e5ff44;
+      --text-primary:  #e0e6ed;
+      --text-secondary:#a0aec0;
+      --text-muted:    #5a6a80;
+      --accent-blue:   #00e5ff;
+      --accent-green:  #00e676;
+      --accent-red:    #ff4c6a;
+      --accent-yellow: #ffd600;
+      --accent-orange: #ff9100;
+      --accent-purple: #b388ff;
+      --accent-cyan:   #00e5ff;
+      --code-bg:       #0c1220;
+      --code-border:   #1a2a42;
+      --shadow:        0 4px 20px rgba(0,0,0,0.5);
+      --radius:        10px;
+      --radius-sm:     6px;
+      --font-sans:     'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono:     'JetBrains Mono', 'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+      --max-width:     1100px;
+      --transition:    0.25s ease;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 24px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.85;
+      font-size: 18px;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background: var(--accent-blue);
+      color: #f5e8e8;
+    }
+
+    a { color: var(--accent-cyan); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--accent-purple); text-decoration: underline; }
+
+    code {
+      background: #0d152488;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 32px 28px 120px;
+    }
+
+    /* ===== HOME BUTTON ===== */
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      text-decoration: none;
+      transition: all var(--transition);
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      z-index: 10;
+    }
+
+    .home-btn:hover {
+      background: rgba(0,229,255,0.1);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      text-decoration: none;
+      box-shadow: 0 0 16px rgba(0,229,255,0.15);
+    }
+
+    /* ===== HEADER ===== */
+    .hero {
+      text-align: center;
+      padding: 60px 32px 48px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 48px;
+      background: linear-gradient(180deg, #0d142088, transparent);
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 7vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #00e5ff, #b388ff 40%, #ff4c6a 70%, #ffd600);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 30px rgba(0,229,255,0.3));
+    }
+
+    .hero .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .hero .meta {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .hero .meta a,
+    .hero .meta span {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--accent-cyan);
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      transition: all var(--transition);
+      box-shadow: 0 0 12px rgba(0,229,255,0.1);
+    }
+
+    .hero .meta a:hover,
+    .hero .meta span:hover {
+      background: rgba(0,229,255,0.1);
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0,229,255,0.25);
+      text-decoration: none;
+    }
+
+    /* ===== GLOBAL CONTROLS ===== */
+    .global-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-sans);
+    }
+
+    .btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--accent-blue);
+    }
+
+    /* ===== TABLE OF CONTENTS ===== */
+    .toc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent-cyan);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      margin-bottom: 48px;
+      box-shadow: var(--shadow), 0 0 30px rgba(0,229,255,0.05);
+    }
+
+    .toc-card h2 {
+      font-size: 1.4rem;
+      color: var(--accent-cyan);
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toc-part {
+      margin-bottom: 14px;
+    }
+
+    .toc-part-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+
+    .toc-part-title a {
+      color: var(--accent-cyan);
+    }
+
+    .toc-part-title a:hover {
+      color: #fff;
+    }
+
+    .toc-sections {
+      list-style: none;
+      padding-left: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2px 16px;
+    }
+
+    .toc-sections li {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      padding: 3px 0;
+    }
+
+    .toc-sections li::before {
+      content: '›';
+      color: var(--accent-blue);
+      margin-right: 6px;
+      font-weight: bold;
+    }
+
+    .toc-sections a {
+      color: var(--text-secondary);
+    }
+
+    .toc-sections a:hover {
+      color: var(--accent-blue);
+    }
+
+    /* ===== PARTS (Major Sections) ===== */
+    .part {
+      margin-bottom: 60px;
+    }
+
+    .part-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--accent-cyan);
+    }
+
+    .part-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .part-header h2 .part-num {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.5px;
+    }
+
+    .back-toc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .back-toc:hover {
+      color: var(--accent-blue);
+    }
+
+    /* ===== SECTIONS (Details/Summary) ===== */
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .section:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .section[open] {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(0,229,255,0.08);
+    }
+
+    .section summary {
+      padding: 18px 24px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      user-select: none;
+      transition: background var(--transition);
+    }
+
+    .section summary::-webkit-details-marker { display: none; }
+
+    .section summary::before {
+      content: '▸';
+      color: var(--accent-cyan);
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .section[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .section summary:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .section summary .section-num {
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 32px;
+      opacity: 0.7;
+    }
+
+    .section-body {
+      padding: 8px 28px 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== CONTENT BLOCKS ===== */
+    .block {
+      margin: 24px 0;
+    }
+
+    .block-label {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+    }
+
+    .block-label.what     { background: #1f3a5f; color: var(--accent-blue); }
+    .block-label.why      { background: #2d1f3f; color: var(--accent-purple); }
+    .block-label.how      { background: #1f3f2a; color: var(--accent-green); }
+    .block-label.output   { background: #3f2f1f; color: var(--accent-orange); }
+    .block-label.justify  { background: #3f1f1f; color: var(--accent-red); }
+    .block-label.warning  { background: #3f2a1f; color: var(--accent-yellow); }
+
+    .block p, .block ul, .block ol {
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      line-height: 1.9;
+    }
+
+    .block ul, .block ol {
+      padding-left: 24px;
+    }
+
+    .block li {
+      margin: 6px 0;
+      color: var(--text-primary);
+    }
+
+    /* ===== CODE BLOCKS ===== */
+    .code-wrapper {
+      position: relative;
+      margin: 8px 0 16px;
+    }
+
+    .code-wrapper pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--text-primary);
+      tab-size: 4;
+    }
+
+    .code-wrapper .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: all var(--transition);
+      font-family: var(--font-sans);
+    }
+
+    .code-wrapper:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .code-wrapper .copy-btn:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      border-color: var(--accent-cyan);
+    }
+
+    .code-wrapper .copy-btn.copied {
+      background: var(--accent-green);
+      color: var(--bg-primary);
+      border-color: var(--accent-green);
+      opacity: 1;
+    }
+
+    /* ===== SYNTAX HIGHLIGHTING (Nmap Commands) ===== */
+    .cmd-flag    { color: var(--accent-green); }
+    .cmd-target  { color: var(--accent-yellow); }
+    .cmd-value   { color: var(--accent-orange); }
+    .cmd-comment { color: var(--text-muted); font-style: italic; }
+    .cmd-root    { color: var(--accent-red); }
+    .cmd-pipe    { color: var(--accent-purple); }
+    .cmd-output  { color: var(--text-secondary); }
+
+    /* ===== TABLES ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: var(--bg-tertiary);
+      color: var(--accent-cyan);
+      text-align: left;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--accent-cyan);
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    /* ===== CALLOUT BOXES ===== */
+    .callout {
+      border-left: 4px solid;
+      padding: 18px 22px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 20px 0;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .callout.info    { border-color: var(--accent-blue);   background: #1f3a5f33; color: var(--accent-blue); }
+    .callout.success { border-color: var(--accent-green);  background: #1f3f2a33; color: var(--accent-green); }
+    .callout.warning { border-color: var(--accent-yellow); background: #3f2f1f33; color: var(--accent-yellow); }
+    .callout.danger  { border-color: var(--accent-red);    background: #3f1f1f33; color: var(--accent-red); }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    /* ===== FLOW DIAGRAM ===== */
+    .flow-diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent-cyan);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 24px 0 48px;
+      overflow-x: auto;
+      box-shadow: 0 0 25px rgba(0,229,255,0.06);
+    }
+
+    .flow-diagram h3 {
+      color: var(--accent-cyan);
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    .flow-diagram pre {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--accent-green);
+    }
+
+    /* ===== CHECKLIST ===== */
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      padding: 8px 0 8px 32px;
+      position: relative;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+
+    .checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-size: 1.1rem;
+    }
+
+    /* ===== PLACEHOLDER ===== */
+    .placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 20px;
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+    }
+
+    /* ===== SCROLL TO TOP ===== */
+    .scroll-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition);
+      box-shadow: 0 4px 20px rgba(0,229,255,0.3);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-top:hover {
+      background: var(--accent-purple);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(179,136,255,0.4);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 2px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .container { padding: 16px 14px 80px; }
+      .hero { padding: 40px 18px 28px; }
+      .hero h1 { font-size: 1.8rem; }
+      .toc-card { padding: 24px; }
+      .toc-sections { grid-template-columns: 1fr; }
+      .section summary { padding: 14px 16px; font-size: 1rem; }
+      .section-body { padding: 6px 16px 22px; }
+      .code-wrapper pre { font-size: 0.85rem; padding: 16px; }
+      .part-header h2 { font-size: 1.4rem; }
+      .block p, .block ul, .block ol { font-size: 1rem; }
+      table { font-size: 0.88rem; }
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { background: #fff; color: #111; }
+      .hero h1 { -webkit-text-fill-color: #111; background: none; }
+      .section { break-inside: avoid; border-color: #ccc; background: #f9f9f9; }
+      .code-wrapper .copy-btn, .scroll-top, .global-controls { display: none; }
+      .code-wrapper pre { background: #f4f4f4; border-color: #ccc; color: #111; }
+      a { color: #0066cc; }
+      th { background: #eee; color: #111; }
+      td { color: #333; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HERO / HEADER ============ -->
+  <div class="container">
+    <header class="hero" id="top">
+      <a href="../index.html" class="home-btn">← Home</a>
+      <h1>NMAP RECON PLAYBOOK</h1>
+      <p class="subtitle">A step-by-step, logic-driven guide for authorized network reconnaissance.</p>
+      <div class="meta">
+        <a href="https://github.com/UnExplainableFish52" target="_blank">👤 Built by: UnExplainableFish52</a>
+        <a href="https://saksham.info.np" target="_blank">🌐 saksham.info.np</a>
+        <a href="https://sakshamsharma.com.np" target="_blank">🔗 sakshamsharma.com.np</a>
+      </div>
+    </header>
+
+    <!-- ============ GLOBAL CONTROLS ============ -->
+    <div class="global-controls">
+      <button class="btn" onclick="expandAll()">⊞ Expand All</button>
+      <button class="btn" onclick="collapseAll()">⊟ Collapse All</button>
+    </div>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <nav class="toc-card" id="toc">
+      <h2>📑 Table of Contents</h2>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-0">PART 0 — Pre-Engagement</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-0-1">0.1 — Authorization &amp; Legal Checklist</a></li>
+          <li><a href="#section-0-2">0.2 — Environment Setup &amp; Verification</a></li>
+          <li><a href="#section-0-3">0.3 — Define Target Scope &amp; Boundaries</a></li>
+          <li><a href="#section-0-4">0.4 — Set Up Logging &amp; Documentation Structure</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-1">PART 1 — Reconnaissance Flow</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-1-1">1.1 — Host Discovery</a></li>
+          <li><a href="#section-1-2">1.2 — Port Scanning</a></li>
+          <li><a href="#section-1-3">1.3 — Service &amp; Version Detection</a></li>
+          <li><a href="#section-1-4">1.4 — OS Detection</a></li>
+          <li><a href="#section-1-5">1.5 — NSE Vulnerability Scanning</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-2">PART 2 — Decision Logic</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-2-1">2.1 — When to Use Which Scan Type (Decision Tree)</a></li>
+          <li><a href="#section-2-2">2.2 — Stealth vs Speed</a></li>
+          <li><a href="#section-2-3">2.3 — Handling Edge Cases (Firewalls, IDS/IPS)</a></li>
+          <li><a href="#section-2-4">2.4 — Timing Templates (T0–T5)</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-3">PART 3 — Analysis &amp; Interpretation</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-3-1">3.1 — Reading Nmap Output (Port States)</a></li>
+          <li><a href="#section-3-2">3.2 — Identifying Critical Services &amp; Red Flags</a></li>
+          <li><a href="#section-3-3">3.3 — Cross-referencing with CVE/ExploitDB</a></li>
+          <li><a href="#section-3-4">3.4 — Prioritizing Findings (Risk Rating)</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-4">PART 4 — Reporting &amp; Documentation</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-4-1">4.1 — Structuring the Report</a></li>
+          <li><a href="#section-4-2">4.2 — Documenting Actions &amp; Justifications</a></li>
+          <li><a href="#section-4-3">4.3 — Archiving &amp; Cleanup</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#part-5">PART 5 — Quick Reference</a></div>
+        <ul class="toc-sections">
+          <li><a href="#section-5-1">5.1 — Flag Cheat Sheet</a></li>
+          <li><a href="#section-5-2">5.2 — Common Scan Combos</a></li>
+          <li><a href="#section-5-3">5.3 — Troubleshooting Common Errors</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#appendix">APPENDIX</a></div>
+        <ul class="toc-sections">
+          <li><a href="#appendix-a">A — Nmap Port States Reference</a></li>
+          <li><a href="#appendix-b">B — Well-Known Ports &amp; Their Services</a></li>
+          <li><a href="#appendix-c">C — NSE Script Categories</a></li>
+          <li><a href="#appendix-d">D — Glossary of Terms</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ============ HIGH-LEVEL FLOW DIAGRAM ============ -->
+    <div class="flow-diagram">
+      <h3>🔁 High-Level Recon Flow — The Algorithm</h3>
+      <pre>
+START
+  │
+  ├── <span class="cmd-flag">[0]</span> Got written authorization? ── <span class="cmd-comment">NO</span> ──► <span style="color:var(--accent-red)">STOP. DO NOT PROCEED.</span>
+  │         <span class="cmd-flag">YES</span>
+  │          ▼
+  ├── <span class="cmd-flag">[0]</span> Environment ready? (Kali, root, interface up) ── <span class="cmd-comment">NO</span> ──► Fix setup.
+  │         <span class="cmd-flag">YES</span>
+  │          ▼
+  ├── <span class="cmd-flag">[0]</span> Scope defined? (IPs, exclusions, boundaries) ── <span class="cmd-comment">NO</span> ──► Define scope.
+  │         <span class="cmd-flag">YES</span>
+  │          ▼
+  ├── <span class="cmd-flag">[0]</span> Logging enabled? ── <span class="cmd-comment">NO</span> ──► Set up output directory &amp; naming.
+  │         <span class="cmd-flag">YES</span>
+  │          ▼
+  ├── <span class="cmd-target">[1.1]</span> Host Discovery ──► Who is alive on the network?
+  │          ▼
+  ├── <span class="cmd-target">[1.2]</span> Port Scan ──► What ports are open on live hosts?
+  │          ▼
+  │     ┌── Stealth needed? ── <span class="cmd-flag">YES</span> ──► SYN scan (<span class="cmd-flag">-sS</span>)
+  │     └── <span class="cmd-comment">NO</span> ──► Connect scan (<span class="cmd-flag">-sT</span>)
+  │          ▼
+  ├── <span class="cmd-target">[1.3]</span> Service Detection ──► What software/version on each port?
+  │          ▼
+  ├── <span class="cmd-target">[1.4]</span> OS Detection ──► What operating system is running?
+  │          ▼
+  ├── <span class="cmd-target">[1.5]</span> Vuln Scan ──► Are these services vulnerable?
+  │          ▼
+  ├── <span class="cmd-value">[3]</span> Analyze &amp; Interpret ──► What does this data mean?
+  │          ▼
+  ├── <span class="cmd-value">[4]</span> Report &amp; Document ──► Log everything with WHY you did it.
+  │          ▼
+  └── <span class="cmd-value">[4.3]</span> Cleanup ──► Archive logs, shred sensitive data.
+  │
+  END</pre>
+    </div>
+
+    <!-- ================================================================ -->
+    <!--                    PART 0: PRE-ENGAGEMENT                        -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-0">
+      <div class="part-header">
+        <h2><span class="part-num">PART 0</span> Pre-Engagement</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 0.1 -->
+      <details class="section" id="section-0-1">
+        <summary><span class="section-num">0.1</span> Authorization &amp; Legal Checklist</summary>
+        <div class="section-body">
+
+          <div class="callout danger">
+            <strong>⚠️ CRITICAL</strong>
+            Never scan a target without explicit, written authorization. Unauthorized scanning is illegal under the Computer Fraud and Abuse Act (CFAA) and equivalent laws worldwide. Ignorance is not a defense.
+          </div>
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Verify that you have legally binding permission to scan the target network/hosts before doing anything else. This is the single most important step in your entire engagement.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Scanning without authorization is a criminal offense in most jurisdictions. Even a simple <code>-sn</code> ping sweep against a network you don't own can result in legal action. Authorization protects you, your organization, and the target.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+            <p>Before running a single command, ensure you have:</p>
+            <ul class="checklist">
+              <li>Written authorization (signed scope document / Rules of Engagement)</li>
+              <li>Clearly defined target scope (IP ranges, domains, exclusions)</li>
+              <li>Emergency contact information for the target organization</li>
+              <li>Defined testing window (dates and times approved for scanning)</li>
+              <li>Understanding of what is OUT of scope</li>
+              <li>Incident response plan if something goes wrong</li>
+              <li>Your own identity and point of contact documented</li>
+            </ul>
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I verified authorization before scanning because unauthorized network reconnaissance is a criminal act. I had written permission from [client/org] dated [date], covering IP range [range], within the testing window of [dates]."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 0.2 -->
+      <details class="section" id="section-0-2">
+        <summary><span class="section-num">0.2</span> Environment Setup &amp; Verification</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Confirm your attack machine is properly configured: you're running as root (or with sudo), your network interface is up and has connectivity, and Nmap is installed and functional.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Many Nmap scan types (SYN scan, OS detection, raw packet scans) require root/sudo privileges because they manipulate raw sockets. If your interface is down or misconfigured, your scans will silently fail or produce garbage results. Verify <em>before</em> you scan.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+            <p>Run these verification commands in order:</p>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># 1. Check your user — should be root or use sudo</span>
+<span class="cmd-root">whoami</span>
+<span class="cmd-comment"># Expected: root</span>
+
+<span class="cmd-comment"># 2. Verify network interface is up</span>
+<span class="cmd-root">ip a</span>
+<span class="cmd-comment"># Look for your interface (eth0, wlan0, etc.) → should show UP and have an IP</span>
+
+<span class="cmd-comment"># 3. Test connectivity to target or gateway</span>
+<span class="cmd-root">ping</span> <span class="cmd-flag">-c 3</span> <span class="cmd-target">192.168.1.1</span>
+<span class="cmd-comment"># Expected: 3 packets transmitted, 3 received, 0% packet loss</span>
+
+<span class="cmd-comment"># 4. Verify Nmap is installed and check version</span>
+<span class="cmd-root">nmap</span> <span class="cmd-flag">--version</span>
+<span class="cmd-comment"># Expected: Nmap version 7.xx (https://nmap.org)</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label output">Expected Output</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-output">$ whoami
+root
+
+$ ip a
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 ...
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0
+
+$ nmap --version
+Nmap version 7.94 ( https://nmap.org )</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I verified root access and network connectivity before scanning to ensure all scan types would function correctly and results would be reliable. Running without root would silently downgrade SYN scans to TCP connect scans, potentially yielding incomplete or inaccurate data."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 0.3 -->
+      <details class="section" id="section-0-3">
+        <summary><span class="section-num">0.3</span> Define Target Scope &amp; Boundaries</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Define exactly which hosts, networks, and IP ranges you are authorized to scan — and explicitly document what is <strong>out of scope</strong>. Create target list files for repeatable scans.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Scope creep is the fastest way to accidentally scan something you shouldn't. A clear scope prevents legal incidents, ensures your scans are focused, and makes your results reproducible. If your scan hits an out-of-scope host, it doesn't matter that it was an "accident."</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+            <p>Document your scope and create a target list file:</p>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Create a target list file</span>
+<span class="cmd-root">cat</span> &lt;&lt; 'EOF' &gt; <span class="cmd-target">targets.txt</span>
+<span class="cmd-comment"># In-scope targets — Project: [name] — Date: [date]</span>
+192.168.1.0/24
+10.0.0.1-50
+scanme.nmap.org
+EOF
+
+<span class="cmd-comment"># Create an exclusion list (hosts to NEVER scan)</span>
+<span class="cmd-root">cat</span> &lt;&lt; 'EOF' &gt; <span class="cmd-target">excludes.txt</span>
+<span class="cmd-comment"># Out-of-scope — DO NOT TOUCH</span>
+192.168.1.1      <span class="cmd-comment"># production gateway</span>
+192.168.1.254    <span class="cmd-comment"># ISP modem</span>
+EOF
+
+<span class="cmd-comment"># Use in scans:</span>
+<span class="cmd-root">nmap</span> <span class="cmd-flag">-iL</span> <span class="cmd-target">targets.txt</span> <span class="cmd-flag">--excludefile</span> <span class="cmd-target">excludes.txt</span></pre>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <strong>💡 Nmap Target Specification Formats</strong>
+            Single IP: <code>192.168.1.1</code> · Range: <code>192.168.1.1-50</code> · CIDR: <code>192.168.1.0/24</code> · Hostname: <code>scanme.nmap.org</code> · From file: <code>-iL targets.txt</code>
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I created explicit target and exclusion lists to ensure all scanning stayed within the authorized scope. Using <code>-iL</code> and <code>--excludefile</code> flags makes scans repeatable and auditable. The exclusion list prevents accidental scanning of critical infrastructure like gateways."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 0.4 -->
+      <details class="section" id="section-0-4">
+        <summary><span class="section-num">0.4</span> Set Up Logging &amp; Documentation Structure</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Create an organized output directory and establish a naming convention for all scan results. Configure Nmap to save output in multiple formats simultaneously.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Professional engagements require documented evidence. If you can't show your work, your findings are worthless. Multiple output formats ensure compatibility: normal output for quick reading, XML for tool import (Metasploit, etc.), and grepable for scripting/parsing.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Create organized project directory</span>
+<span class="cmd-root">mkdir -p</span> <span class="cmd-target">~/engagements/project-name/{scans,reports,evidence,notes}</span>
+<span class="cmd-root">cd</span> <span class="cmd-target">~/engagements/project-name/scans</span>
+
+<span class="cmd-comment"># Naming convention: [type]-[target]-[date]</span>
+<span class="cmd-comment"># Example: discovery-192.168.1.0-20260222</span>
+
+<span class="cmd-comment"># Save in ALL formats at once with -oA (normal + XML + grepable)</span>
+<span class="cmd-root">nmap</span> <span class="cmd-flag">-sn</span> <span class="cmd-target">192.168.1.0/24</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">discovery-192.168.1.0-$(date +%Y%m%d)</span>
+
+<span class="cmd-comment"># This creates three files:</span>
+<span class="cmd-comment">#   discovery-192.168.1.0-20260222.nmap   (human readable)</span>
+<span class="cmd-comment">#   discovery-192.168.1.0-20260222.xml    (import into tools)</span>
+<span class="cmd-comment">#   discovery-192.168.1.0-20260222.gnmap  (grepable format)</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Nmap Output Formats</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Flag</th><th>Format</th><th>Use Case</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>-oN file</code></td><td>Normal</td><td>Human-readable, like terminal output</td></tr>
+                  <tr><td><code>-oX file</code></td><td>XML</td><td>Import into Metasploit, Nessus, or custom parsers</td></tr>
+                  <tr><td><code>-oG file</code></td><td>Grepable</td><td>Quick parsing with grep/awk/cut</td></tr>
+                  <tr><td><code>-oA base</code></td><td>All three</td><td>Creates .nmap, .xml, and .gnmap files at once</td></tr>
+                  <tr><td><code>-oS file</code></td><td>Script kiddie</td><td>Joke format — never use professionally</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I established a structured output directory and used <code>-oA</code> to capture all scans in three formats simultaneously. This ensures findings are documented for the report (normal), importable into other tools (XML), and parseable for further analysis (grepable). The timestamped naming convention prevents overwriting and creates a clear audit trail."</p>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--                 PART 1: RECONNAISSANCE FLOW                      -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-1">
+      <div class="part-header">
+        <h2><span class="part-num">PART 1</span> Reconnaissance Flow</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 1.1 -->
+      <details class="section" id="section-1-1">
+        <summary><span class="section-num">1.1</span> Host Discovery — Who is alive?</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Determine which hosts on the target network are online and responsive before wasting time port scanning dead IPs. This is also called a <strong>ping sweep</strong>.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Scanning all 65,535 ports on every IP in a /24 (256 hosts) without first checking which are alive is wildly inefficient. Host discovery narrows your target list to only live hosts, saving massive time and reducing network noise. It also gives you a map of the network topology.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+            <p>Nmap uses multiple probe types for host discovery. The default (<code>-sn</code>) sends ICMP echo, TCP SYN to 443, TCP ACK to 80, and ICMP timestamp. On local networks, it uses ARP instead (faster, more reliable).</p>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Basic host discovery (ping sweep) — no port scan</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn</span> <span class="cmd-target">192.168.1.0/24</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">discovery</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -sn             Ping scan — disable port scan, only check if host is up</span>
+<span class="cmd-comment">#   192.168.1.0/24  Target: entire /24 subnet (256 IPs)</span>
+<span class="cmd-comment">#   -oA discovery   Save output in all 3 formats</span></pre>
+            </div>
+
+            <p style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary);">If ICMP is blocked (common in hardened networks), use these alternatives:</p>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># TCP SYN discovery on common ports (bypasses ICMP block)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn -PS</span><span class="cmd-value">22,80,443,445,3389</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># TCP ACK discovery (may bypass stateless firewalls)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn -PA</span><span class="cmd-value">80,443</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># UDP discovery (DHCP, DNS, SNMP ports)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn -PU</span><span class="cmd-value">53,67,161</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># ARP discovery (local network only — fastest &amp; most reliable)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn -PR</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Combine multiple methods for maximum coverage</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn -PE -PS</span><span class="cmd-value">22,80,443</span> <span class="cmd-flag">-PA</span><span class="cmd-value">80</span> <span class="cmd-flag">-PU</span><span class="cmd-value">53</span> <span class="cmd-target">192.168.1.0/24</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">discovery-aggressive</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Discovery Probes Reference</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Flag</th><th>Method</th><th>When to Use</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>-sn</code></td><td>Default (ICMP + TCP)</td><td>Starting point for any engagement</td></tr>
+                  <tr><td><code>-PE</code></td><td>ICMP Echo</td><td>Standard ping — works on most internal nets</td></tr>
+                  <tr><td><code>-PP</code></td><td>ICMP Timestamp</td><td>Alternate ICMP — sometimes not filtered</td></tr>
+                  <tr><td><code>-PM</code></td><td>ICMP Address Mask</td><td>Rare, but can bypass some filters</td></tr>
+                  <tr><td><code>-PS&lt;ports&gt;</code></td><td>TCP SYN</td><td>When ICMP is blocked; target common open ports</td></tr>
+                  <tr><td><code>-PA&lt;ports&gt;</code></td><td>TCP ACK</td><td>Bypasses stateless firewalls</td></tr>
+                  <tr><td><code>-PU&lt;ports&gt;</code></td><td>UDP</td><td>Discover hosts running UDP services (DNS, SNMP)</td></tr>
+                  <tr><td><code>-PR</code></td><td>ARP</td><td>Local subnets — fastest &amp; most accurate</td></tr>
+                  <tr><td><code>-Pn</code></td><td>Skip discovery</td><td>Assume host is up — scan even if ping fails</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label output">Expected Output</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-output">Starting Nmap 7.94 ( https://nmap.org )
+Nmap scan report for 192.168.1.1
+Host is up (0.0023s latency).
+MAC Address: AA:BB:CC:DD:EE:01 (Cisco Systems)
+
+Nmap scan report for 192.168.1.50
+Host is up (0.0041s latency).
+MAC Address: AA:BB:CC:DD:EE:02 (Dell)
+
+Nmap scan report for 192.168.1.100
+Host is up (0.00012s latency).
+
+Nmap done: 256 IP addresses (3 hosts up) scanned in 2.84 seconds</span></pre>
+            </div>
+          </div>
+
+          <div class="callout warning">
+            <strong>⚠️ Watch For</strong>
+            If zero hosts show up on a network you know is active, ICMP is likely being blocked. Switch to TCP/ARP discovery (<code>-PS</code>/<code>-PR</code>). If scanning remotely, use <code>-Pn</code> to skip discovery and go straight to port scanning (slower but reliable).
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I performed host discovery first to identify live hosts within the authorized scope. Scanning all 65,535 ports on every IP without first determining which hosts are alive would be inefficient and generate unnecessary traffic. The <code>-sn</code> flag disables port scanning and only checks for host presence, minimizing network impact."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 1.2 -->
+      <details class="section" id="section-1-2">
+        <summary><span class="section-num">1.2</span> Port Scanning — What doors are open?</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Determine which TCP and UDP ports are open on each live host. Open ports reveal running services — each one is a potential attack surface.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Every open port is a doorway into the system. A web server on port 80, SSH on port 22, or a database on port 3306 — each represents a service that could be misconfigured, outdated, or vulnerable. Port scanning is the foundation of enumeration.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+            <p>Choose your scan type based on the engagement requirements: stealth, speed, or thoroughness.</p>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># SYN scan (default, stealthy, fast) — requires root</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">syn-scan</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -sS   SYN (half-open) scan — sends SYN, waits for SYN/ACK</span>
+<span class="cmd-comment">#         If received → port open, send RST (never complete handshake)</span>
+<span class="cmd-comment">#         Result: stealthier because no full TCP connection is logged</span></pre>
+            </div>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Connect scan (no root needed, noisier)</span>
+<span class="cmd-root">nmap</span> <span class="cmd-flag">-sT</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">connect-scan</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -sT   TCP connect scan — completes full 3-way handshake</span>
+<span class="cmd-comment">#         Visible in logs, but works without root/sudo</span></pre>
+            </div>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># UDP scan (slow but essential — many services use UDP)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sU</span> <span class="cmd-flag">--top-ports</span> <span class="cmd-value">20</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">udp-scan</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -sU            UDP scan (no handshake — relies on ICMP responses)</span>
+<span class="cmd-comment">#   --top-ports 20 Only scan the 20 most common UDP ports (DNS, SNMP, DHCP...)</span>
+<span class="cmd-comment">#   UDP is SLOW — always limit port range unless you have time</span></pre>
+            </div>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Scan specific ports</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p</span> <span class="cmd-value">22,80,443,445,3389,8080</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Scan ALL ports (1-65535)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p-</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">full-port-scan</span>
+
+<span class="cmd-comment"># Scan top 1000 ports (Nmap default)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --top-ports</span> <span class="cmd-value">1000</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Combined TCP + UDP scan</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sU --top-ports</span> <span class="cmd-value">100</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">combined-scan</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Scan Type Comparison</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Flag</th><th>Type</th><th>Root?</th><th>Speed</th><th>Stealth</th><th>Use When</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>-sS</code></td><td>SYN (half-open)</td><td>Yes</td><td>Fast</td><td>High</td><td>Default choice — fast &amp; stealthy</td></tr>
+                  <tr><td><code>-sT</code></td><td>TCP Connect</td><td>No</td><td>Medium</td><td>Low</td><td>When you don't have root</td></tr>
+                  <tr><td><code>-sU</code></td><td>UDP</td><td>Yes</td><td>Slow</td><td>Medium</td><td>Finding DNS, SNMP, DHCP services</td></tr>
+                  <tr><td><code>-sA</code></td><td>ACK</td><td>Yes</td><td>Fast</td><td>Medium</td><td>Mapping firewall rules</td></tr>
+                  <tr><td><code>-sF</code></td><td>FIN</td><td>Yes</td><td>Fast</td><td>High</td><td>Evading basic firewalls</td></tr>
+                  <tr><td><code>-sX</code></td><td>Xmas</td><td>Yes</td><td>Fast</td><td>High</td><td>Evading basic firewalls</td></tr>
+                  <tr><td><code>-sN</code></td><td>Null</td><td>Yes</td><td>Fast</td><td>High</td><td>Evading basic firewalls</td></tr>
+                  <tr><td><code>-sW</code></td><td>Window</td><td>Yes</td><td>Fast</td><td>Medium</td><td>Distinguish open/closed on some OSes</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label output">Expected Output</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-output">PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+443/tcp  open  https
+3306/tcp open  mysql
+8080/tcp open  http-proxy
+
+Nmap done: 1 IP address (1 host up) scanned in 1.43 seconds</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I used a SYN scan (<code>-sS</code>) as the primary port scan because it's the fastest and most reliable method, and it doesn't complete TCP connections — reducing the chance of being logged by the target. I followed up with a targeted UDP scan on the top 20 ports because critical services like DNS (53), SNMP (161), and DHCP (67/68) only run on UDP."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 1.3 -->
+      <details class="section" id="section-1-3">
+        <summary><span class="section-num">1.3</span> Service &amp; Version Detection — What's behind those doors?</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Identify the exact software and version running on each open port. Knowing that port 80 is "open" is useful; knowing it's running <strong>Apache 2.4.49</strong> (which has a path traversal CVE) is <em>actionable</em>.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Different versions of the same software have different vulnerabilities. Apache 2.4.49 is exploitable (CVE-2021-41773). Apache 2.4.54 is patched. Without version detection, you can't prioritize targets or identify known vulnerabilities. This step transforms open ports into real intelligence.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Service &amp; version detection on all open ports</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">version-scan</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -sV   Probe open ports to determine service/version info</span>
+<span class="cmd-comment">#         Sends service-specific probes and matches responses</span>
+<span class="cmd-comment">#         against nmap-service-probes database</span>
+
+<span class="cmd-comment"># Increase intensity for stubborn services (0-9, default: 7)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --version-intensity</span> <span class="cmd-value">9</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Light version scan (faster, less accurate)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --version-light</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Combined: SYN scan + version detection + all ports</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -p-</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">full-version-scan</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label output">Expected Output</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-output">PORT     STATE SERVICE  VERSION
+22/tcp   open  ssh      OpenSSH 8.9p1 Ubuntu 3ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http     Apache httpd 2.4.52 ((Ubuntu))
+443/tcp  open  ssl/http nginx 1.18.0 (Ubuntu)
+3306/tcp open  mysql    MySQL 8.0.32-0ubuntu0.22.04.2
+8080/tcp open  http     Apache Tomcat 9.0.68
+
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span></pre>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <strong>💡 Pro Tip</strong>
+            Once you have version info, immediately search for CVEs: <code>searchsploit Apache 2.4.52</code> or check <a href="https://www.exploit-db.com" target="_blank">exploit-db.com</a> and <a href="https://nvd.nist.gov" target="_blank">nvd.nist.gov</a>.
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I ran service version detection (<code>-sV</code>) to identify exact software versions on each open port. This is required to cross-reference against CVE databases and determine if any running services have known vulnerabilities. Without version information, vulnerability assessment is guesswork."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 1.4 -->
+      <details class="section" id="section-1-4">
+        <summary><span class="section-num">1.4</span> OS Detection — What machines are these?</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Determine the operating system running on each target host based on TCP/IP stack fingerprinting. Nmap analyzes subtle differences in how different OSes implement TCP/IP protocols.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>The OS determines which exploits, privilege escalation techniques, and post-exploitation tools are applicable. A Windows Server 2012 vs Ubuntu 22.04 vs a Cisco IOS device — each requires an entirely different approach. OS detection also helps identify misconfigurations (e.g., a Windows machine on a Linux-only network).</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># OS detection — requires root and at least 1 open + 1 closed port</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-O</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">os-detect</span>
+
+<span class="cmd-comment"># Breakdown:</span>
+<span class="cmd-comment">#   -O   Enable OS detection (TCP/IP fingerprinting)</span>
+<span class="cmd-comment">#        Sends specially crafted packets and compares responses</span>
+<span class="cmd-comment">#        to nmap-os-db database (thousands of fingerprints)</span>
+
+<span class="cmd-comment"># More aggressive guessing when detection is uncertain</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-O --osscan-guess</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Limit OS detection attempts (faster, give up on hard targets)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-O --max-os-tries</span> <span class="cmd-value">1</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># The ultimate recon combo: SYN + Version + OS + Default Scripts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -O -sC</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">full-recon</span>
+<span class="cmd-comment"># Shorthand for the above:</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-A</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">aggressive-scan</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label output">Expected Output</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-output">OS detection performed. Please report any incorrect results at https://nmap.org/submit/
+Device type: general purpose
+Running: Linux 5.X
+OS CPE: cpe:/o:linux:linux_kernel:5
+OS details: Linux 5.4 - 5.15
+Network Distance: 1 hop
+
+Aggressive OS guesses: Linux 5.4 (97%), Linux 5.15 (94%), Linux 5.10 (92%)</span></pre>
+            </div>
+          </div>
+
+          <div class="callout warning">
+            <strong>⚠️ Limitations</strong>
+            OS detection needs at least one open port and one closed port to work reliably. If all ports are filtered, detection may fail. Use <code>--osscan-guess</code> to get a best-effort result. Also note: VMs and containers may fingerprint differently than bare metal.
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I performed OS detection (<code>-O</code>) to determine the target's operating system, which directly impacts which vulnerabilities, exploits, and post-exploitation tools are relevant. This information is essential for accurate risk assessment and for guiding the next stages of the engagement."</p>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 1.5 -->
+      <details class="section" id="section-1-5">
+        <summary><span class="section-num">1.5</span> NSE Vulnerability Scanning — Are those doors weak?</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Use Nmap's Scripting Engine (NSE) to run vulnerability checks, brute-force tests, and advanced enumeration against discovered services. NSE transforms Nmap from a port scanner into a vulnerability scanner.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label why">Why</span>
+            <p>Knowing a port is open and running Apache 2.4.49 is good. Confirming it's actually vulnerable to CVE-2021-41773 with a real test is <em>proof</em>. NSE scripts provide that confirmation. They can also enumerate users, shares, directories, and configurations — giving you actionable findings instead of theoretical ones.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Run default safe scripts (-sC is shorthand for --script=default)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV -sC</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">default-scripts</span>
+
+<span class="cmd-comment"># Run all vuln-category scripts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">vuln</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">vuln-scan</span>
+
+<span class="cmd-comment"># Run a specific script</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">http-vuln-cve2021-41773</span> <span class="cmd-flag">-p</span> <span class="cmd-value">80</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Run multiple script categories</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">"vuln,safe,discovery"</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># SMB enumeration (Windows targets)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">--script</span> <span class="cmd-value">smb-enum-shares,smb-enum-users,smb-os-discovery</span> <span class="cmd-flag">-p</span> <span class="cmd-value">445</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># HTTP enumeration</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">--script</span> <span class="cmd-value">http-enum,http-headers,http-methods,http-title</span> <span class="cmd-flag">-p</span> <span class="cmd-value">80,443,8080</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Pass arguments to scripts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">--script</span> <span class="cmd-value">http-brute</span> <span class="cmd-flag">--script-args</span> <span class="cmd-value">userdb=users.txt,passdb=pass.txt</span> <span class="cmd-flag">-p</span> <span class="cmd-value">80</span> <span class="cmd-target">192.168.1.50</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">NSE Script Categories</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Category</th><th>Description</th><th>Safe?</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>default</code></td><td>Safe, useful scripts that run with <code>-sC</code></td><td>Yes</td></tr>
+                  <tr><td><code>safe</code></td><td>Scripts that won't crash services or be intrusive</td><td>Yes</td></tr>
+                  <tr><td><code>vuln</code></td><td>Check for known vulnerabilities</td><td>Mostly</td></tr>
+                  <tr><td><code>discovery</code></td><td>Discover more info about the network</td><td>Yes</td></tr>
+                  <tr><td><code>auth</code></td><td>Deal with authentication/credentials</td><td>Varies</td></tr>
+                  <tr><td><code>brute</code></td><td>Brute-force credential attacks</td><td>No</td></tr>
+                  <tr><td><code>exploit</code></td><td>Actively exploit vulnerabilities</td><td>No</td></tr>
+                  <tr><td><code>intrusive</code></td><td>May crash services or generate noise</td><td>No</td></tr>
+                  <tr><td><code>dos</code></td><td>Denial of service tests</td><td>No</td></tr>
+                  <tr><td><code>malware</code></td><td>Check for malware/backdoors on target</td><td>Yes</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="callout danger">
+            <strong>⚠️ DANGER</strong>
+            The <code>exploit</code>, <code>brute</code>, <code>dos</code>, and <code>intrusive</code> categories can crash services, lock accounts, or cause outages. NEVER run them without explicit authorization and an understanding of the risks. Stick to <code>vuln</code>, <code>safe</code>, and <code>default</code> unless you have a specific reason and permission.
+          </div>
+
+          <div class="block">
+            <span class="block-label justify">Justification</span>
+            <p>"I used NSE scripts in the <code>vuln</code> category to validate whether identified services have known vulnerabilities. This provides concrete evidence of exploitable weaknesses rather than theoretical risk. I limited scripts to safe/vuln categories to avoid service disruption."</p>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--                   PART 2: DECISION LOGIC                         -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-2">
+      <div class="part-header">
+        <h2><span class="part-num">PART 2</span> Decision Logic</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 2.1 -->
+      <details class="section" id="section-2-1">
+        <summary><span class="section-num">2.1</span> When to Use Which Scan Type — Decision Tree</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>A decision framework to choose the right Nmap scan type based on your situation: root access, stealth requirements, network type, and goal.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — The Decision Tree</span>
+            <div class="code-wrapper">
+              <pre>
+<span class="cmd-comment">Q: Do you have root/sudo access?</span>
+│
+├── <span class="cmd-flag">NO</span>
+│   └── Use <span class="cmd-flag">-sT</span> (TCP Connect) — only option without root
+│
+└── <span class="cmd-flag">YES</span>
+    │
+    <span class="cmd-comment">Q: Do you need to be stealthy?</span>
+    │
+    ├── <span class="cmd-flag">YES</span>
+    │   │
+    │   <span class="cmd-comment">Q: Is the target behind a firewall?</span>
+    │   │
+    │   ├── <span class="cmd-flag">YES</span> → Try <span class="cmd-flag">-sS</span> first. If blocked, try <span class="cmd-flag">-sF</span>/<span class="cmd-flag">-sX</span>/<span class="cmd-flag">-sN</span>
+    │   │         Add <span class="cmd-flag">-f</span> (fragment packets) + <span class="cmd-flag">-D</span> (decoys)
+    │   │
+    │   └── <span class="cmd-flag">NO</span> → Use <span class="cmd-flag">-sS</span> (SYN scan) — fast &amp; stealthy
+    │
+    └── <span class="cmd-flag">NO</span> (speed matters more)
+        │
+        <span class="cmd-comment">Q: Need UDP services too?</span>
+        │
+        ├── <span class="cmd-flag">YES</span> → <span class="cmd-flag">-sS -sU</span> (combined TCP + UDP)
+        │
+        └── <span class="cmd-flag">NO</span> → <span class="cmd-flag">-sS</span> with <span class="cmd-flag">-T4</span> for speed
+              </pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Quick Decision Matrix</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Scenario</th><th>Scan Type</th><th>Flags</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Default / first scan</td><td>SYN</td><td><code>-sS</code></td></tr>
+                  <tr><td>No root access</td><td>Connect</td><td><code>-sT</code></td></tr>
+                  <tr><td>Need UDP (DNS, SNMP)</td><td>UDP</td><td><code>-sU --top-ports 20</code></td></tr>
+                  <tr><td>Behind firewall</td><td>FIN/Xmas/Null</td><td><code>-sF</code> / <code>-sX</code> / <code>-sN</code></td></tr>
+                  <tr><td>Map firewall rules</td><td>ACK</td><td><code>-sA</code></td></tr>
+                  <tr><td>Full recon (all info)</td><td>Aggressive</td><td><code>-A</code> (= <code>-sV -O -sC --traceroute</code>)</td></tr>
+                  <tr><td>Quick check, few ports</td><td>SYN + specific</td><td><code>-sS -p 22,80,443</code></td></tr>
+                  <tr><td>CTF / lab (no stealth needed)</td><td>Aggressive</td><td><code>-A -T4 -p-</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 2.2 -->
+      <details class="section" id="section-2-2">
+        <summary><span class="section-num">2.2</span> Stealth vs Speed — Choosing the Right Approach</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Understanding the trade-off between scanning speed and detection risk, and how to calibrate your approach based on the engagement type.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — The Spectrum</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Approach</th><th>Speed</th><th>Noise</th><th>Flags</th><th>When</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Ghost</strong></td><td>Very slow</td><td>Minimal</td>
+                    <td><code>-sS -T0 -f --data-length 24 -D RND:5</code></td>
+                    <td>Red team engagements with active SOC monitoring</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Quiet</strong></td><td>Slow</td><td>Low</td>
+                    <td><code>-sS -T2 --max-rate 10</code></td>
+                    <td>Client networks with IDS/IPS</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Normal</strong></td><td>Medium</td><td>Medium</td>
+                    <td><code>-sS -T3</code></td>
+                    <td>Standard pentest with authorization</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Fast</strong></td><td>Fast</td><td>High</td>
+                    <td><code>-sS -T4 --min-rate 1000</code></td>
+                    <td>Lab environments, CTFs, time-constrained</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Insane</strong></td><td>Fastest</td><td>Maximum</td>
+                    <td><code>-T5 --min-rate 5000</code></td>
+                    <td>Your own lab only — may miss ports or crash services</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <strong>💡 Rule of Thumb</strong>
+            <code>-T3</code> is the default. Use <code>-T4</code> for most authorized engagements. Only use <code>-T0</code>/<code>-T1</code> if you're specifically testing IDS evasion. Never use <code>-T5</code> on production networks.
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 2.3 -->
+      <details class="section" id="section-2-3">
+        <summary><span class="section-num">2.3</span> Handling Edge Cases — Firewalls, IDS/IPS, Filtered Ports</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Techniques for scanning targets protected by firewalls, intrusion detection/prevention systems, or hosts that show all ports as "filtered."</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Evasion Techniques</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Fragment packets — split probes into tiny fragments</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -f</span> <span class="cmd-target">192.168.1.50</span>
+<span class="cmd-comment"># -f   Fragment packets into 8-byte chunks (harder for firewalls to reassemble)</span>
+<span class="cmd-comment"># -ff  Fragment into 16-byte chunks (even smaller)</span>
+
+<span class="cmd-comment"># Decoy scan — hide your IP among fake source IPs</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -D</span> <span class="cmd-value">RND:5</span> <span class="cmd-target">192.168.1.50</span>
+<span class="cmd-comment"># -D RND:5   Generate 5 random decoy IPs alongside your real scan</span>
+<span class="cmd-comment">#            Target sees 6 scanners — can't tell which is real</span>
+
+<span class="cmd-comment"># Spoof source port (some firewalls allow traffic from port 53/80)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --source-port</span> <span class="cmd-value">53</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Add random data to packets (avoid signature detection)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --data-length</span> <span class="cmd-value">24</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Use a specific MTU (must be multiple of 8)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --mtu</span> <span class="cmd-value">24</span> <span class="cmd-target">192.168.1.50</span>
+
+<span class="cmd-comment"># Idle/zombie scan — scan using a third-party zombie host</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sI</span> <span class="cmd-value">zombie-host:port</span> <span class="cmd-target">192.168.1.50</span>
+<span class="cmd-comment"># -sI   Completely hides your IP — uses predictable IP-ID of zombie</span>
+<span class="cmd-comment">#       The ultimate stealth scan (complex to set up)</span>
+
+<span class="cmd-comment"># MAC address spoofing</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --spoof-mac</span> <span class="cmd-value">Dell</span> <span class="cmd-target">192.168.1.50</span>
+<span class="cmd-comment"># --spoof-mac Dell   Random Dell MAC</span>
+<span class="cmd-comment"># --spoof-mac 0      Completely random MAC</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Firewall Evasion Decision Flow</span>
+            <div class="code-wrapper">
+              <pre>
+<span class="cmd-comment">Ports showing as "filtered"?</span>
+│
+├── Try <span class="cmd-flag">-Pn</span> (skip host discovery, assume alive)
+│
+├── Still filtered? → Try <span class="cmd-flag">-sA</span> (ACK scan to map firewall rules)
+│   └── Shows unfiltered? → Firewall is stateless → Try <span class="cmd-flag">-sF</span>/<span class="cmd-flag">-sX</span>/<span class="cmd-flag">-sN</span>
+│
+├── Still blocked? → Try <span class="cmd-flag">-f</span> (fragment) + <span class="cmd-flag">--source-port 53</span>
+│
+├── Still blocked? → Try <span class="cmd-flag">--data-length 24</span> + <span class="cmd-flag">-T2</span> (slow &amp; padded)
+│
+└── Last resort → <span class="cmd-flag">-sI zombie:port</span> (idle scan through third-party)
+              </pre>
+            </div>
+          </div>
+
+          <div class="callout warning">
+            <strong>⚠️ Ethics Note</strong>
+            Evasion techniques exist to test defensive controls, not to bypass them for unauthorized access. Always document WHY you used evasion and ensure it's within scope.
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 2.4 -->
+      <details class="section" id="section-2-4">
+        <summary><span class="section-num">2.4</span> Timing Templates — T0 through T5</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Nmap's timing templates (<code>-T0</code> through <code>-T5</code>) control scan speed by adjusting parallelism, timeouts, and retry limits. Higher numbers = faster but noisier.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Timing Templates Explained</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Template</th><th>Name</th><th>Speed</th><th>Stealth</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>-T0</code></td><td>Paranoid</td><td>~5 min/port</td><td>Maximum</td><td>1 port at a time, 5 min between probes. IDS evasion.</td></tr>
+                  <tr><td><code>-T1</code></td><td>Sneaky</td><td>~15 sec/port</td><td>Very high</td><td>Serial scanning, 15 sec between probes.</td></tr>
+                  <tr><td><code>-T2</code></td><td>Polite</td><td>Slow</td><td>High</td><td>Serial, 0.4 sec delay. Won't overwhelm the network.</td></tr>
+                  <tr><td><code>-T3</code></td><td>Normal</td><td>Default</td><td>Medium</td><td>Nmap default. Balanced speed/reliability.</td></tr>
+                  <tr><td><code>-T4</code></td><td>Aggressive</td><td>Fast</td><td>Low</td><td>Recommended for authorized pentests. Parallel + short timeouts.</td></tr>
+                  <tr><td><code>-T5</code></td><td>Insane</td><td>Fastest</td><td>None</td><td>Lab only. Sacrifices accuracy for speed. May miss open ports.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Fine-Grained Timing Controls</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Set maximum packets per second</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --max-rate</span> <span class="cmd-value">100</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Set minimum packets per second (force speed)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --min-rate</span> <span class="cmd-value">1000</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Control parallelism (how many hosts at once)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --min-parallelism</span> <span class="cmd-value">10</span> <span class="cmd-flag">--max-parallelism</span> <span class="cmd-value">50</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Set host timeout (skip hosts taking too long)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --host-timeout</span> <span class="cmd-value">30s</span> <span class="cmd-target">192.168.1.0/24</span>
+
+<span class="cmd-comment"># Set per-probe retransmission limits</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-target">192.168.1.0/24</span></pre>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--              PART 3: ANALYSIS & INTERPRETATION                   -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-3">
+      <div class="part-header">
+        <h2><span class="part-num">PART 3</span> Analysis &amp; Interpretation</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 3.1 -->
+      <details class="section" id="section-3-1">
+        <summary><span class="section-num">3.1</span> Reading Nmap Output — Port States Explained</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Understanding the six possible port states that Nmap reports and what each one means for your reconnaissance.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — The Six Port States</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>State</th><th>Meaning</th><th>SYN Scan Response</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="color:var(--accent-green);font-weight:700">open</span></td>
+                    <td>A service is actively listening and accepting connections</td>
+                    <td>SYN/ACK received</td>
+                    <td>Enumerate! Run <code>-sV</code> and NSE scripts</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-red);font-weight:700">closed</span></td>
+                    <td>Port is reachable but no service is listening</td>
+                    <td>RST received</td>
+                    <td>Host is alive. Port may open later. Note it.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-yellow);font-weight:700">filtered</span></td>
+                    <td>A firewall/filter is blocking probes — can't determine state</td>
+                    <td>No response / ICMP unreachable</td>
+                    <td>Try evasion techniques (<code>-f</code>, <code>-D</code>, different scan type)</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-blue);font-weight:700">unfiltered</span></td>
+                    <td>Port is reachable but can't determine open/closed (ACK scan)</td>
+                    <td>RST received (ACK scan)</td>
+                    <td>Use SYN or Connect scan to determine actual state</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-orange);font-weight:700">open|filtered</span></td>
+                    <td>Can't determine if open or filtered (UDP/FIN/Xmas/Null scans)</td>
+                    <td>No response</td>
+                    <td>Try version scan (<code>-sV</code>) to differentiate</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--text-muted);font-weight:700">closed|filtered</span></td>
+                    <td>Can't determine if closed or filtered (IP ID idle scan)</td>
+                    <td>Rare edge case</td>
+                    <td>Use different scan type for confirmation</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <strong>💡 Key Insight</strong>
+            "Filtered" doesn't mean "safe." It means you can't see through the firewall. The service might still be running. Always try alternate scan types on filtered ports before writing them off.
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 3.2 -->
+      <details class="section" id="section-3-2">
+        <summary><span class="section-num">3.2</span> Identifying Critical Services &amp; Red Flags</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>A guide to spotting high-value targets and dangerous misconfigurations in your scan results.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Red Flags to Watch For</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Finding</th><th>Port(s)</th><th>Risk</th><th>Why It's Bad</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>FTP (especially anonymous)</td><td>21</td><td style="color:var(--accent-red)">HIGH</td><td>Cleartext creds, anonymous upload/download, bounce attacks</td></tr>
+                  <tr><td>Telnet</td><td>23</td><td style="color:var(--accent-red)">HIGH</td><td>Cleartext everything — should never be exposed</td></tr>
+                  <tr><td>SSH (old version)</td><td>22</td><td style="color:var(--accent-yellow)">MED</td><td>Old OpenSSH = known CVEs. Check version carefully.</td></tr>
+                  <tr><td>SMTP (open relay)</td><td>25</td><td style="color:var(--accent-red)">HIGH</td><td>Can be abused for spam, phishing, spoofing</td></tr>
+                  <tr><td>DNS (zone transfer)</td><td>53</td><td style="color:var(--accent-yellow)">MED</td><td>Exposes full internal DNS map</td></tr>
+                  <tr><td>HTTP (no HTTPS)</td><td>80</td><td style="color:var(--accent-yellow)">MED</td><td>Cleartext traffic, potential for MITM</td></tr>
+                  <tr><td>SMB</td><td>445</td><td style="color:var(--accent-red)">HIGH</td><td>EternalBlue, null sessions, share enumeration</td></tr>
+                  <tr><td>MySQL/PostgreSQL</td><td>3306/5432</td><td style="color:var(--accent-red)">HIGH</td><td>Database exposed to network — possible data breach</td></tr>
+                  <tr><td>RDP</td><td>3389</td><td style="color:var(--accent-red)">HIGH</td><td>BlueKeep, brute-force target, should not be internet-facing</td></tr>
+                  <tr><td>VNC</td><td>5900</td><td style="color:var(--accent-red)">HIGH</td><td>Often weak/no auth, cleartext</td></tr>
+                  <tr><td>Redis</td><td>6379</td><td style="color:var(--accent-red)">CRIT</td><td>Often no auth, RCE via config manipulation</td></tr>
+                  <tr><td>Memcached</td><td>11211</td><td style="color:var(--accent-red)">HIGH</td><td>No auth, DDoS amplification, data leak</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 3.3 -->
+      <details class="section" id="section-3-3">
+        <summary><span class="section-num">3.3</span> Cross-referencing with CVE/ExploitDB</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Once you have service versions, systematically check them against vulnerability databases to find known exploits.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — The Workflow</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># 1. Use searchsploit (local ExploitDB mirror, comes with Kali)</span>
+<span class="cmd-root">searchsploit</span> <span class="cmd-target">Apache 2.4.52</span>
+<span class="cmd-root">searchsploit</span> <span class="cmd-target">OpenSSH 8.9</span>
+<span class="cmd-root">searchsploit</span> <span class="cmd-target">MySQL 8.0</span>
+
+<span class="cmd-comment"># 2. Get more details on a specific exploit</span>
+<span class="cmd-root">searchsploit</span> <span class="cmd-flag">-x</span> <span class="cmd-value">50383</span>   <span class="cmd-comment"># View exploit details</span>
+<span class="cmd-root">searchsploit</span> <span class="cmd-flag">-m</span> <span class="cmd-value">50383</span>   <span class="cmd-comment"># Copy exploit to current directory</span>
+
+<span class="cmd-comment"># 3. Online resources (when searchsploit isn't enough)</span>
+<span class="cmd-comment">#    https://www.exploit-db.com     ← ExploitDB (full database)</span>
+<span class="cmd-comment">#    https://nvd.nist.gov           ← NVD (CVE details + CVSS scores)</span>
+<span class="cmd-comment">#    https://cve.mitre.org          ← CVE catalog</span>
+<span class="cmd-comment">#    https://vulners.com            ← Aggregated vuln search</span>
+
+<span class="cmd-comment"># 4. Use Nmap NSE for automated checking</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">vulners</span> <span class="cmd-target">192.168.1.50</span>
+<span class="cmd-comment"># The 'vulners' script queries the vulners.com API</span>
+<span class="cmd-comment"># and shows CVEs for detected service versions</span></pre>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 3.4 -->
+      <details class="section" id="section-3-4">
+        <summary><span class="section-num">3.4</span> Prioritizing Findings — Risk Rating</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>How to rank your findings from "fix now" to "noted" using a practical risk matrix.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Risk Prioritization Matrix</span>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Priority</th><th>Criteria</th><th>Example</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="color:var(--accent-red);font-weight:700">🔴 CRITICAL</span></td>
+                    <td>Known RCE exploit exists, service is public-facing, no auth required</td>
+                    <td>EternalBlue on SMB 445, Redis no auth, Apache path traversal</td>
+                    <td>Immediate remediation. Notify client ASAP.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-orange);font-weight:700">🟠 HIGH</span></td>
+                    <td>Exploitable vulnerability, requires some conditions (auth, network position)</td>
+                    <td>Old OpenSSH version, exposed MySQL, RDP without NLA</td>
+                    <td>Remediate within 24-48 hours.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-yellow);font-weight:700">🟡 MEDIUM</span></td>
+                    <td>Misconfiguration or outdated service, not directly exploitable</td>
+                    <td>HTTP without HTTPS, verbose error pages, missing headers</td>
+                    <td>Include in report, remediate within sprint.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--accent-blue);font-weight:700">🔵 LOW</span></td>
+                    <td>Informational finding, best practice violation</td>
+                    <td>Server version disclosure, unnecessary open ports</td>
+                    <td>Include in report as recommendation.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="color:var(--text-muted);font-weight:700">⚪ INFO</span></td>
+                    <td>Observed behavior, no risk</td>
+                    <td>OS type detected, network topology mapped</td>
+                    <td>Document for reference.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--             PART 4: REPORTING & DOCUMENTATION                    -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-4">
+      <div class="part-header">
+        <h2><span class="part-num">PART 4</span> Reporting &amp; Documentation</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 4.1 -->
+      <details class="section" id="section-4-1">
+        <summary><span class="section-num">4.1</span> Structuring the Report — Executive + Technical</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>How to structure your report so both executives (no tech knowledge) and engineers (want all the details) can use it.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Report Template</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-comment">
+REPORT STRUCTURE:
+
+1. EXECUTIVE SUMMARY (1 page max)
+   ├── Engagement overview (who, what, when, why)
+   ├── Key findings summary (plain English, no jargon)
+   ├── Overall risk rating (Critical / High / Medium / Low)
+   └── Top 3 recommendations (actionable, prioritized)
+
+2. SCOPE & METHODOLOGY
+   ├── Authorized targets and boundaries
+   ├── Tools used and versions
+   ├── Scan types performed and justification
+   └── Testing timeline
+
+3. FINDINGS (per finding)
+   ├── Title (descriptive, e.g., "Exposed MySQL Database on 192.168.1.50:3306")
+   ├── Risk Rating (Critical/High/Medium/Low)
+   ├── Description (what was found)
+   ├── Evidence (screenshots, Nmap output, exact command used)
+   ├── Impact (what could an attacker do with this?)
+   ├── Remediation (specific steps to fix)
+   └── References (CVE links, vendor advisories)
+
+4. APPENDICES
+   ├── Full Nmap output files
+   ├── Target list and exclusion list
+   ├── Raw scan data (XML files)
+   └── Tool version information
+              </span></pre>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 4.2 -->
+      <details class="section" id="section-4-2">
+        <summary><span class="section-num">4.2</span> Documenting Actions &amp; Justifications</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Document every action you take with a justification — the "why" behind every command. This is your defense when a senior or auditor asks, "Why did you do this?"</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How — Action Log Template</span>
+            <div class="code-wrapper">
+              <pre><span class="cmd-comment">
+ACTION LOG FORMAT:
+
+Timestamp:     2026-02-22 14:30 UTC
+Action:        SYN scan on 192.168.1.0/24
+Command:       sudo nmap -sS -p- -oA full-syn-192.168.1.0 192.168.1.0/24
+Justification: Full port scan required to identify all open services after
+               initial host discovery revealed 12 live hosts. SYN scan chosen
+               for speed and stealth per engagement rules.
+Result:        Found 47 open ports across 12 hosts. Key findings:
+               - 192.168.1.50: Port 3306 (MySQL) open — investigate further
+               - 192.168.1.100: Port 445 (SMB) open — check for EternalBlue
+Output File:   scans/full-syn-192.168.1.0-20260222.nmap
+              </span></pre>
+            </div>
+          </div>
+
+          <div class="callout success">
+            <strong>✅ Golden Rule</strong>
+            If you can't explain why you ran a command, you shouldn't have run it. Every action needs a reason tied to the engagement objectives.
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 4.3 -->
+      <details class="section" id="section-4-3">
+        <summary><span class="section-num">4.3</span> Archiving &amp; Cleanup</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label what">What</span>
+            <p>Securely archive all engagement data and clean up sensitive material from your attack machine after the engagement is complete.</p>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">How</span>
+
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># 1. Archive everything into a compressed, encrypted file</span>
+<span class="cmd-root">tar czf</span> <span class="cmd-target">project-name-$(date +%Y%m%d).tar.gz</span> <span class="cmd-value">~/engagements/project-name/</span>
+
+<span class="cmd-comment"># 2. Encrypt the archive (GPG)</span>
+<span class="cmd-root">gpg</span> <span class="cmd-flag">-c --cipher-algo AES256</span> <span class="cmd-target">project-name-20260222.tar.gz</span>
+
+<span class="cmd-comment"># 3. Verify the encrypted archive</span>
+<span class="cmd-root">gpg</span> <span class="cmd-flag">-d</span> <span class="cmd-target">project-name-20260222.tar.gz.gpg</span> <span class="cmd-pipe">|</span> <span class="cmd-root">tar tzf -</span>
+
+<span class="cmd-comment"># 4. Securely delete originals (shred, not rm)</span>
+<span class="cmd-root">shred</span> <span class="cmd-flag">-vfz -n 3</span> <span class="cmd-target">~/engagements/project-name/scans/*</span>
+<span class="cmd-root">rm -rf</span> <span class="cmd-target">~/engagements/project-name/</span>
+
+<span class="cmd-comment"># 5. Clear bash history of sensitive commands</span>
+<span class="cmd-root">history -c</span>
+<span class="cmd-root">cat /dev/null</span> &gt; <span class="cmd-target">~/.bash_history</span></pre>
+            </div>
+          </div>
+
+          <div class="callout warning">
+            <strong>⚠️ Data Retention</strong>
+            Follow your organization's data retention policy. Some engagements require keeping data for 90 days, some for 1 year. Never destroy data before the retention period ends. Always have the encrypted archive stored securely before deleting originals.
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--                  PART 5: QUICK REFERENCE                         -->
+    <!-- ================================================================ -->
+    <section class="part" id="part-5">
+      <div class="part-header">
+        <h2><span class="part-num">PART 5</span> Quick Reference</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- 5.1 -->
+      <details class="section" id="section-5-1">
+        <summary><span class="section-num">5.1</span> Flag Cheat Sheet — Every Flag, What It Does, When to Use It</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label how">Host Discovery</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-sn</code></td><td>Ping scan — discover hosts, skip port scan</td><td>First step: find live hosts</td></tr>
+                  <tr><td><code>-Pn</code></td><td>Skip host discovery — treat all hosts as alive</td><td>Hosts behind firewalls blocking pings</td></tr>
+                  <tr><td><code>-PS&lt;ports&gt;</code></td><td>TCP SYN discovery</td><td>ICMP blocked, try TCP probes</td></tr>
+                  <tr><td><code>-PA&lt;ports&gt;</code></td><td>TCP ACK discovery</td><td>Bypass stateless firewalls</td></tr>
+                  <tr><td><code>-PU&lt;ports&gt;</code></td><td>UDP discovery</td><td>Find hosts with UDP-only services</td></tr>
+                  <tr><td><code>-PE</code></td><td>ICMP echo request</td><td>Standard ping (often blocked externally)</td></tr>
+                  <tr><td><code>-PP</code></td><td>ICMP timestamp request</td><td>Alternate ICMP when echo is filtered</td></tr>
+                  <tr><td><code>-PM</code></td><td>ICMP address mask request</td><td>Rare, another ICMP alternative</td></tr>
+                  <tr><td><code>-PR</code></td><td>ARP discovery</td><td>Local networks — fastest method</td></tr>
+                  <tr><td><code>-n</code></td><td>Never do DNS resolution</td><td>Speed up scan, avoid DNS noise</td></tr>
+                  <tr><td><code>-R</code></td><td>Always resolve DNS</td><td>Want hostnames for all IPs</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Scan Techniques</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-sS</code></td><td>SYN scan (half-open, stealthy)</td><td>Default for most scans (requires root)</td></tr>
+                  <tr><td><code>-sT</code></td><td>TCP connect scan (full handshake)</td><td>When you don't have root/sudo</td></tr>
+                  <tr><td><code>-sU</code></td><td>UDP scan</td><td>Finding DNS, SNMP, DHCP, TFTP</td></tr>
+                  <tr><td><code>-sA</code></td><td>ACK scan</td><td>Map firewall rules (find unfiltered ports)</td></tr>
+                  <tr><td><code>-sF</code></td><td>FIN scan</td><td>Bypass basic firewalls/IDS</td></tr>
+                  <tr><td><code>-sX</code></td><td>Xmas scan (FIN+PSH+URG)</td><td>Bypass basic firewalls/IDS</td></tr>
+                  <tr><td><code>-sN</code></td><td>Null scan (no flags set)</td><td>Bypass basic firewalls/IDS</td></tr>
+                  <tr><td><code>-sW</code></td><td>Window scan</td><td>Distinguish open/closed on some OSes</td></tr>
+                  <tr><td><code>-sI &lt;zombie&gt;</code></td><td>Idle/zombie scan</td><td>Maximum stealth — hides your IP entirely</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Port Specification</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-p &lt;ports&gt;</code></td><td>Scan specific ports</td><td><code>-p 22,80,443</code></td></tr>
+                  <tr><td><code>-p-</code></td><td>Scan all 65,535 ports</td><td><code>-p-</code></td></tr>
+                  <tr><td><code>-p 1-1000</code></td><td>Scan port range</td><td><code>-p 1-1000</code></td></tr>
+                  <tr><td><code>--top-ports &lt;n&gt;</code></td><td>Scan top N most common ports</td><td><code>--top-ports 100</code></td></tr>
+                  <tr><td><code>-F</code></td><td>Fast scan (top 100 ports)</td><td><code>-F</code></td></tr>
+                  <tr><td><code>-r</code></td><td>Scan ports sequentially (not randomized)</td><td><code>-r</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Service / Version / OS Detection</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-sV</code></td><td>Version detection</td><td>Always — identifies software versions</td></tr>
+                  <tr><td><code>--version-intensity &lt;0-9&gt;</code></td><td>Set version detection effort</td><td>Increase if services aren't identified</td></tr>
+                  <tr><td><code>--version-light</code></td><td>Light mode (intensity 2)</td><td>Quick scan, less accuracy</td></tr>
+                  <tr><td><code>--version-all</code></td><td>Max mode (intensity 9)</td><td>Need definitive version info</td></tr>
+                  <tr><td><code>-O</code></td><td>OS detection</td><td>Determine target operating system</td></tr>
+                  <tr><td><code>--osscan-guess</code></td><td>Aggressive OS guessing</td><td>When detection is uncertain</td></tr>
+                  <tr><td><code>-A</code></td><td>Aggressive (<code>-sV -O -sC --traceroute</code>)</td><td>Full recon — use in labs/CTFs</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">NSE Scripts</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-sC</code></td><td>Run default scripts</td><td><code>-sC</code> (same as <code>--script=default</code>)</td></tr>
+                  <tr><td><code>--script &lt;name&gt;</code></td><td>Run specific script(s)</td><td><code>--script vuln</code></td></tr>
+                  <tr><td><code>--script-args</code></td><td>Pass args to scripts</td><td><code>--script-args userdb=u.txt</code></td></tr>
+                  <tr><td><code>--script-updatedb</code></td><td>Update script database</td><td>After adding new scripts</td></tr>
+                  <tr><td><code>--script-help &lt;name&gt;</code></td><td>Show script help</td><td><code>--script-help smb-enum-shares</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Timing &amp; Performance</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-T&lt;0-5&gt;</code></td><td>Timing template</td><td>See Section 2.4 for details</td></tr>
+                  <tr><td><code>--min-rate &lt;n&gt;</code></td><td>Minimum packets/sec</td><td>Force faster scanning</td></tr>
+                  <tr><td><code>--max-rate &lt;n&gt;</code></td><td>Maximum packets/sec</td><td>Throttle to avoid detection</td></tr>
+                  <tr><td><code>--max-retries &lt;n&gt;</code></td><td>Max probe retransmissions</td><td>Reduce retries for speed</td></tr>
+                  <tr><td><code>--host-timeout &lt;time&gt;</code></td><td>Give up on host after time</td><td>Skip unresponsive hosts</td></tr>
+                  <tr><td><code>--scan-delay &lt;time&gt;</code></td><td>Delay between probes</td><td>IDS evasion</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Evasion &amp; Spoofing</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-f</code></td><td>Fragment packets</td><td>Bypass packet inspection</td></tr>
+                  <tr><td><code>-D &lt;decoys&gt;</code></td><td>Cloak scan with decoy IPs</td><td>Hide source among fake scanners</td></tr>
+                  <tr><td><code>-S &lt;IP&gt;</code></td><td>Spoof source IP</td><td>Specific spoofing scenarios</td></tr>
+                  <tr><td><code>--source-port &lt;n&gt;</code></td><td>Spoof source port</td><td>Exploit firewall rules (53, 80)</td></tr>
+                  <tr><td><code>--data-length &lt;n&gt;</code></td><td>Append random data to packets</td><td>Avoid size-based signatures</td></tr>
+                  <tr><td><code>--spoof-mac &lt;mac&gt;</code></td><td>Spoof MAC address</td><td>Bypass MAC filtering</td></tr>
+                  <tr><td><code>--mtu &lt;n&gt;</code></td><td>Set custom MTU (must be ×8)</td><td>Fine-grained fragmentation</td></tr>
+                  <tr><td><code>--badsum</code></td><td>Send packets with bad checksums</td><td>Test firewall/IDS behavior</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Output</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag</th><th>Description</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td><code>-oN &lt;file&gt;</code></td><td>Normal output</td><td>Human-readable report</td></tr>
+                  <tr><td><code>-oX &lt;file&gt;</code></td><td>XML output</td><td>Import into tools (Metasploit, etc.)</td></tr>
+                  <tr><td><code>-oG &lt;file&gt;</code></td><td>Grepable output</td><td>Parsing with grep/awk/cut</td></tr>
+                  <tr><td><code>-oA &lt;base&gt;</code></td><td>All three formats</td><td>Always use this — covers all bases</td></tr>
+                  <tr><td><code>-v</code> / <code>-vv</code></td><td>Increase verbosity</td><td>See results in real-time</td></tr>
+                  <tr><td><code>-d</code> / <code>-dd</code></td><td>Debug mode</td><td>Troubleshooting Nmap itself</td></tr>
+                  <tr><td><code>--reason</code></td><td>Show why port is in its state</td><td>Understanding scan results</td></tr>
+                  <tr><td><code>--open</code></td><td>Only show open ports</td><td>Clean output, skip closed/filtered</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Target Specification</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Flag / Format</th><th>Description</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td>Single IP</td><td>One host</td><td><code>192.168.1.1</code></td></tr>
+                  <tr><td>CIDR</td><td>Subnet</td><td><code>192.168.1.0/24</code></td></tr>
+                  <tr><td>Range</td><td>IP range</td><td><code>192.168.1.1-50</code></td></tr>
+                  <tr><td>Hostname</td><td>DNS name</td><td><code>scanme.nmap.org</code></td></tr>
+                  <tr><td><code>-iL &lt;file&gt;</code></td><td>Read targets from file</td><td><code>-iL targets.txt</code></td></tr>
+                  <tr><td><code>--exclude &lt;hosts&gt;</code></td><td>Exclude hosts</td><td><code>--exclude 192.168.1.1</code></td></tr>
+                  <tr><td><code>--excludefile &lt;file&gt;</code></td><td>Exclude from file</td><td><code>--excludefile skip.txt</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 5.2 -->
+      <details class="section" id="section-5-2">
+        <summary><span class="section-num">5.2</span> Common Scan Combos — Copy-Paste Ready</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label how">Standard Recon Flow</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Step 1: Discover live hosts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sn</span> <span class="cmd-target">192.168.1.0/24</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">01-discovery</span>
+
+<span class="cmd-comment"># Step 2: Quick port scan on live hosts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS --top-ports</span> <span class="cmd-value">1000</span> <span class="cmd-flag">-iL</span> <span class="cmd-target">live-hosts.txt</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">02-port-scan</span>
+
+<span class="cmd-comment"># Step 3: Full port scan on interesting hosts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p-</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">03-full-ports</span>
+
+<span class="cmd-comment"># Step 4: Service + version + OS + default scripts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -O -sC -p</span> <span class="cmd-value">22,80,443,3306</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">04-enum</span>
+
+<span class="cmd-comment"># Step 5: Vulnerability scan</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">vuln</span> <span class="cmd-flag">-p</span> <span class="cmd-value">22,80,443,3306</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">05-vuln</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Quick &amp; Dirty (Lab/CTF)</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># One-liner: all ports, all info, aggressive timing</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-A -T4 -p-</span> <span class="cmd-target">10.10.10.5</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">htb-target</span>
+
+<span class="cmd-comment"># Quick recon with vuln check</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV -sC --script</span> <span class="cmd-value">vuln</span> <span class="cmd-flag">-T4</span> <span class="cmd-target">10.10.10.5</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">htb-vuln</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Stealthy Scan</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Slow, fragmented, decoy scan — maximum stealth</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -T2 -f -D</span> <span class="cmd-value">RND:5</span> <span class="cmd-flag">--data-length</span> <span class="cmd-value">24</span> <span class="cmd-flag">--source-port</span> <span class="cmd-value">53</span> <span class="cmd-flag">-p</span> <span class="cmd-value">22,80,443,445,3389</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">stealth-scan</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Windows Target Enumeration</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Windows-focused scan: SMB, RDP, WinRM, LDAP, Kerberos</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -sC -p</span> <span class="cmd-value">21,22,53,80,88,135,139,389,443,445,636,3268,3269,3389,5985,5986</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">windows-enum</span>
+
+<span class="cmd-comment"># SMB-specific enumeration</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">--script</span> <span class="cmd-value">"smb-*"</span> <span class="cmd-flag">-p</span> <span class="cmd-value">445</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">smb-enum</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">Web Server Enumeration</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Web-focused enumeration: HTTP scripts</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sV --script</span> <span class="cmd-value">"http-enum,http-headers,http-methods,http-title,http-robots.txt,http-shellshock,http-vuln*"</span> <span class="cmd-flag">-p</span> <span class="cmd-value">80,443,8080,8443</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">web-enum</span></pre>
+            </div>
+          </div>
+
+          <div class="block">
+            <span class="block-label how">UDP Quick Scan</span>
+            <div class="code-wrapper">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><span class="cmd-comment"># Top 20 UDP ports — catches DNS, SNMP, DHCP, TFTP, NTP</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sU -sV --top-ports</span> <span class="cmd-value">20</span> <span class="cmd-target">192.168.1.50</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">udp-quick</span>
+
+<span class="cmd-comment"># SNMP enumeration (if port 161 found open)</span>
+<span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sU -sV --script</span> <span class="cmd-value">snmp-info,snmp-sysdescr,snmp-netstat</span> <span class="cmd-flag">-p</span> <span class="cmd-value">161</span> <span class="cmd-target">192.168.1.50</span></pre>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+      <!-- 5.3 -->
+      <details class="section" id="section-5-3">
+        <summary><span class="section-num">5.3</span> Troubleshooting Common Errors</summary>
+        <div class="section-body">
+
+          <div class="block">
+            <span class="block-label how">Common Problems &amp; Solutions</span>
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Error / Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><code>You requested a scan type which requires root privileges</code></td>
+                    <td>Running SYN/OS scan without root</td>
+                    <td>Use <code>sudo</code> or switch to <code>-sT</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>Note: Host seems down</code></td>
+                    <td>ICMP blocked by firewall</td>
+                    <td>Add <code>-Pn</code> to skip host discovery</td>
+                  </tr>
+                  <tr>
+                    <td>All ports show as <code>filtered</code></td>
+                    <td>Firewall blocking all probes</td>
+                    <td>Try <code>-f</code>, <code>-sF</code>/<code>-sX</code>, or <code>--source-port 53</code></td>
+                  </tr>
+                  <tr>
+                    <td>Scan is extremely slow</td>
+                    <td>Many filtered ports causing timeouts</td>
+                    <td>Use <code>--max-retries 1</code> + <code>--host-timeout 30s</code></td>
+                  </tr>
+                  <tr>
+                    <td>OS detection says <code>No exact OS matches</code></td>
+                    <td>Need 1 open + 1 closed port</td>
+                    <td>Use <code>--osscan-guess</code> or scan all ports first</td>
+                  </tr>
+                  <tr>
+                    <td>UDP scan taking forever</td>
+                    <td>UDP is inherently slow (no handshake)</td>
+                    <td>Limit with <code>--top-ports 20</code> or <code>-p 53,161,500</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>RTTVAR has grown to over X</code></td>
+                    <td>Network latency / packet loss</td>
+                    <td>Slow down: <code>-T2</code> or <code>--max-rate 50</code></td>
+                  </tr>
+                  <tr>
+                    <td>Service version shows <code>tcpwrapped</code></td>
+                    <td>TCP connection completed but service sent nothing</td>
+                    <td>Service is protected by TCP wrappers. Try NSE scripts.</td>
+                  </tr>
+                  <tr>
+                    <td><code>Failed to open device eth0</code></td>
+                    <td>Interface is down or wrong name</td>
+                    <td>Run <code>ip a</code> to check interface names, use <code>-e &lt;iface&gt;</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!--                         APPENDIX                                 -->
+    <!-- ================================================================ -->
+    <section class="part" id="appendix">
+      <div class="part-header">
+        <h2><span class="part-num">APPENDIX</span> Reference Material</h2>
+        <a href="#toc" class="back-toc">↑ Back to TOC</a>
+      </div>
+
+      <!-- A -->
+      <details class="section" id="appendix-a">
+        <summary><span class="section-num">A</span> Nmap Port States Reference</summary>
+        <div class="section-body">
+          <div class="block">
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>State</th><th>SYN Scan Response</th><th>Connect Scan</th><th>UDP Scan</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td style="color:var(--accent-green)">open</td><td>SYN/ACK</td><td>Connection succeeds</td><td>UDP response</td><td>Service is listening</td></tr>
+                  <tr><td style="color:var(--accent-red)">closed</td><td>RST</td><td>Connection refused</td><td>ICMP port unreachable</td><td>Reachable but nothing listening</td></tr>
+                  <tr><td style="color:var(--accent-yellow)">filtered</td><td>No response / ICMP error</td><td>No response / ICMP error</td><td>No response</td><td>Firewall is blocking</td></tr>
+                  <tr><td style="color:var(--accent-blue)">unfiltered</td><td>N/A</td><td>N/A</td><td>N/A</td><td>ACK scan only — port reachable but unknown state</td></tr>
+                  <tr><td style="color:var(--accent-orange)">open|filtered</td><td>N/A</td><td>N/A</td><td>No response</td><td>Can't tell — try <code>-sV</code></td></tr>
+                  <tr><td style="color:var(--text-muted)">closed|filtered</td><td>N/A</td><td>N/A</td><td>N/A</td><td>Idle scan edge case</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- B -->
+      <details class="section" id="appendix-b">
+        <summary><span class="section-num">B</span> Well-Known Ports &amp; Their Services</summary>
+        <div class="section-body">
+          <div class="block">
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Notes</th></tr></thead>
+                <tbody>
+                  <tr><td>20-21</td><td>TCP</td><td>FTP</td><td>File Transfer Protocol (data + control)</td></tr>
+                  <tr><td>22</td><td>TCP</td><td>SSH</td><td>Secure Shell — remote access</td></tr>
+                  <tr><td>23</td><td>TCP</td><td>Telnet</td><td>Insecure remote access — avoid</td></tr>
+                  <tr><td>25</td><td>TCP</td><td>SMTP</td><td>Email sending</td></tr>
+                  <tr><td>53</td><td>TCP/UDP</td><td>DNS</td><td>Domain Name System</td></tr>
+                  <tr><td>67-68</td><td>UDP</td><td>DHCP</td><td>Dynamic Host Configuration</td></tr>
+                  <tr><td>69</td><td>UDP</td><td>TFTP</td><td>Trivial FTP — no auth</td></tr>
+                  <tr><td>80</td><td>TCP</td><td>HTTP</td><td>Web traffic (unencrypted)</td></tr>
+                  <tr><td>88</td><td>TCP</td><td>Kerberos</td><td>Windows authentication</td></tr>
+                  <tr><td>110</td><td>TCP</td><td>POP3</td><td>Email retrieval</td></tr>
+                  <tr><td>111</td><td>TCP/UDP</td><td>RPCbind</td><td>RPC port mapper (NFS, NIS)</td></tr>
+                  <tr><td>135</td><td>TCP</td><td>MSRPC</td><td>Microsoft RPC (Windows)</td></tr>
+                  <tr><td>139</td><td>TCP</td><td>NetBIOS</td><td>Windows file sharing (legacy)</td></tr>
+                  <tr><td>143</td><td>TCP</td><td>IMAP</td><td>Email retrieval</td></tr>
+                  <tr><td>161</td><td>UDP</td><td>SNMP</td><td>Network monitoring — often misconfigured</td></tr>
+                  <tr><td>389</td><td>TCP</td><td>LDAP</td><td>Directory services (Active Directory)</td></tr>
+                  <tr><td>443</td><td>TCP</td><td>HTTPS</td><td>Encrypted web traffic</td></tr>
+                  <tr><td>445</td><td>TCP</td><td>SMB</td><td>Windows file sharing — high-value target</td></tr>
+                  <tr><td>993</td><td>TCP</td><td>IMAPS</td><td>Encrypted IMAP</td></tr>
+                  <tr><td>995</td><td>TCP</td><td>POP3S</td><td>Encrypted POP3</td></tr>
+                  <tr><td>1433</td><td>TCP</td><td>MSSQL</td><td>Microsoft SQL Server</td></tr>
+                  <tr><td>1521</td><td>TCP</td><td>Oracle DB</td><td>Oracle database listener</td></tr>
+                  <tr><td>2049</td><td>TCP</td><td>NFS</td><td>Network File System</td></tr>
+                  <tr><td>3306</td><td>TCP</td><td>MySQL</td><td>MySQL database</td></tr>
+                  <tr><td>3389</td><td>TCP</td><td>RDP</td><td>Remote Desktop Protocol</td></tr>
+                  <tr><td>5432</td><td>TCP</td><td>PostgreSQL</td><td>PostgreSQL database</td></tr>
+                  <tr><td>5900</td><td>TCP</td><td>VNC</td><td>Virtual Network Computing</td></tr>
+                  <tr><td>5985-5986</td><td>TCP</td><td>WinRM</td><td>Windows Remote Management</td></tr>
+                  <tr><td>6379</td><td>TCP</td><td>Redis</td><td>In-memory database — often no auth</td></tr>
+                  <tr><td>8080</td><td>TCP</td><td>HTTP Alt</td><td>Alternative HTTP (Tomcat, proxies)</td></tr>
+                  <tr><td>8443</td><td>TCP</td><td>HTTPS Alt</td><td>Alternative HTTPS</td></tr>
+                  <tr><td>11211</td><td>TCP/UDP</td><td>Memcached</td><td>Caching system — no auth by default</td></tr>
+                  <tr><td>27017</td><td>TCP</td><td>MongoDB</td><td>NoSQL database — often exposed</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- C -->
+      <details class="section" id="appendix-c">
+        <summary><span class="section-num">C</span> NSE Script Categories</summary>
+        <div class="section-body">
+          <div class="block">
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Category</th><th>Description</th><th>Example Scripts</th><th>Risk</th></tr></thead>
+                <tbody>
+                  <tr><td><code>auth</code></td><td>Authentication &amp; credential handling</td><td><code>ftp-anon</code>, <code>ssh-auth-methods</code></td><td>Low</td></tr>
+                  <tr><td><code>broadcast</code></td><td>Discover hosts via broadcast</td><td><code>broadcast-dhcp-discover</code></td><td>Low</td></tr>
+                  <tr><td><code>brute</code></td><td>Brute-force password attacks</td><td><code>http-brute</code>, <code>ssh-brute</code></td><td style="color:var(--accent-red)">High</td></tr>
+                  <tr><td><code>default</code></td><td>Safe, commonly useful scripts</td><td><code>http-title</code>, <code>ssh-hostkey</code></td><td>Low</td></tr>
+                  <tr><td><code>discovery</code></td><td>Network &amp; service discovery</td><td><code>dns-brute</code>, <code>smb-os-discovery</code></td><td>Low</td></tr>
+                  <tr><td><code>dos</code></td><td>Denial of service</td><td><code>http-slowloris</code></td><td style="color:var(--accent-red)">High</td></tr>
+                  <tr><td><code>exploit</code></td><td>Active exploitation</td><td><code>smb-vuln-ms17-010</code></td><td style="color:var(--accent-red)">High</td></tr>
+                  <tr><td><code>external</code></td><td>Queries external services</td><td><code>whois-ip</code></td><td>Low</td></tr>
+                  <tr><td><code>fuzzer</code></td><td>Fuzz testing inputs</td><td><code>dns-fuzz</code></td><td style="color:var(--accent-yellow)">Med</td></tr>
+                  <tr><td><code>intrusive</code></td><td>May crash/disrupt services</td><td>Various</td><td style="color:var(--accent-red)">High</td></tr>
+                  <tr><td><code>malware</code></td><td>Check for malware/backdoors</td><td><code>http-malware-host</code></td><td>Low</td></tr>
+                  <tr><td><code>safe</code></td><td>Won't crash or harm target</td><td><code>http-headers</code>, <code>banner</code></td><td>Low</td></tr>
+                  <tr><td><code>version</code></td><td>Enhanced version detection</td><td>Runs with <code>-sV</code></td><td>Low</td></tr>
+                  <tr><td><code>vuln</code></td><td>Vulnerability checking</td><td><code>http-vuln-*</code>, <code>smb-vuln-*</code></td><td style="color:var(--accent-yellow)">Med</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- D -->
+      <details class="section" id="appendix-d">
+        <summary><span class="section-num">D</span> Glossary of Terms</summary>
+        <div class="section-body">
+          <div class="block">
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>ACK</strong></td><td>TCP acknowledgment flag — used to confirm receipt of packets</td></tr>
+                  <tr><td><strong>ARP</strong></td><td>Address Resolution Protocol — maps IP addresses to MAC addresses on local networks</td></tr>
+                  <tr><td><strong>Banner Grabbing</strong></td><td>Connecting to a service and reading the initial response (banner) to identify software/version</td></tr>
+                  <tr><td><strong>CIDR</strong></td><td>Classless Inter-Domain Routing — notation for IP ranges (e.g., /24 = 256 IPs)</td></tr>
+                  <tr><td><strong>CVE</strong></td><td>Common Vulnerabilities and Exposures — standardized vulnerability identifier</td></tr>
+                  <tr><td><strong>CVSS</strong></td><td>Common Vulnerability Scoring System — severity rating (0.0 to 10.0)</td></tr>
+                  <tr><td><strong>Decoy</strong></td><td>Fake source IPs used to mask the real scanner's identity</td></tr>
+                  <tr><td><strong>Enumeration</strong></td><td>Extracting detailed information about services, users, shares, etc.</td></tr>
+                  <tr><td><strong>Fingerprinting</strong></td><td>Identifying OS or service by analyzing unique response characteristics</td></tr>
+                  <tr><td><strong>Half-Open Scan</strong></td><td>SYN scan — sends SYN but never completes the TCP handshake</td></tr>
+                  <tr><td><strong>ICMP</strong></td><td>Internet Control Message Protocol — used for ping, traceroute, error messages</td></tr>
+                  <tr><td><strong>IDS</strong></td><td>Intrusion Detection System — monitors and alerts on suspicious activity</td></tr>
+                  <tr><td><strong>IPS</strong></td><td>Intrusion Prevention System — monitors and blocks suspicious activity</td></tr>
+                  <tr><td><strong>MTU</strong></td><td>Maximum Transmission Unit — largest packet size on a network link</td></tr>
+                  <tr><td><strong>NSE</strong></td><td>Nmap Scripting Engine — Lua-based framework for extending Nmap's functionality</td></tr>
+                  <tr><td><strong>Ping Sweep</strong></td><td>Sending probes to a range of IPs to find which hosts are alive</td></tr>
+                  <tr><td><strong>Port</strong></td><td>A numbered endpoint (0-65535) that identifies a specific service on a host</td></tr>
+                  <tr><td><strong>RCE</strong></td><td>Remote Code Execution — ability to run arbitrary code on a target system</td></tr>
+                  <tr><td><strong>Reconnaissance</strong></td><td>The information-gathering phase before exploitation</td></tr>
+                  <tr><td><strong>RST</strong></td><td>TCP reset flag — abruptly terminates a connection</td></tr>
+                  <tr><td><strong>SOC</strong></td><td>Security Operations Center — team monitoring for security incidents</td></tr>
+                  <tr><td><strong>SYN</strong></td><td>TCP synchronize flag — initiates a connection (first step of 3-way handshake)</td></tr>
+                  <tr><td><strong>SYN/ACK</strong></td><td>TCP response combining SYN + ACK — indicates a port is open</td></tr>
+                  <tr><td><strong>TCP</strong></td><td>Transmission Control Protocol — connection-oriented, reliable transport</td></tr>
+                  <tr><td><strong>Three-Way Handshake</strong></td><td>TCP connection setup: SYN → SYN/ACK → ACK</td></tr>
+                  <tr><td><strong>UDP</strong></td><td>User Datagram Protocol — connectionless, no handshake, no guaranteed delivery</td></tr>
+                  <tr><td><strong>Zombie Scan</strong></td><td>Idle scan using a third-party host to completely hide the scanner's identity</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <p>🛡️ Nmap Recon Playbook — Built by Loki</p>
+      <p>Use responsibly. Always get authorization. Stay ethical.</p>
+      <p style="margin-top:8px; font-size:0.7rem; color:var(--text-muted)">Last updated: February 2026</p>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- ============ SCROLL TO TOP BUTTON ============ -->
+  <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" title="Back to top">↑</button>
+
+  <!-- ============ JAVASCRIPT ============ -->
+  <script>
+    // ===== Copy to Clipboard =====
+    function copyCode(btn) {
+      const pre = btn.nextElementSibling;
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ===== Expand / Collapse All =====
+    function expandAll() {
+      document.querySelectorAll('details.section').forEach(d => d.open = true);
+    }
+
+    function collapseAll() {
+      document.querySelectorAll('details.section').forEach(d => d.open = false);
+    }
+
+    // ===== Scroll to Top =====
+    const scrollBtn = document.getElementById('scrollTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===== Smooth highlight on anchor navigation =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href').slice(1);
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          // If clicking a section link, open it
+          if (targetEl.tagName === 'DETAILS') {
+            targetEl.open = true;
+          }
+          // If clicking a section within a part, also open it
+          const parentDetails = targetEl.closest('details.section');
+          if (parentDetails) {
+            parentDetails.open = true;
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
