@@ -643,6 +643,194 @@
       table { font-size: 0.88rem; }
     }
 
+    /* ===== TL;DR SECTION ===== */
+    .tldr-section {
+      margin-top: 64px;
+      padding: 48px 32px;
+      background: linear-gradient(135deg, rgba(17,24,39,0.95), rgba(26,32,53,0.95));
+      border: 2px solid transparent;
+      border-image: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-orange)) 1;
+      border-radius: 0;
+      position: relative;
+    }
+
+    .tldr-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(0,229,255,0.04) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 50%, rgba(179,136,255,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .tldr-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .tldr-header h2 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: tldrGradient 4s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    @keyframes tldrGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .tldr-header .tldr-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .tldr-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .tldr-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 28px 24px;
+      position: relative;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .tldr-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 24px rgba(0,229,255,0.08);
+    }
+
+    .tldr-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .tldr-card-number {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      letter-spacing: 1px;
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+
+    .tldr-card-number.stealth { background: var(--accent-purple); color: #fff; }
+    .tldr-card-number.recon   { background: var(--accent-cyan); }
+    .tldr-card-number.os      { background: var(--accent-orange); color: var(--bg-primary); }
+    .tldr-card-number.quick   { background: var(--accent-green); color: var(--bg-primary); }
+    .tldr-card-number.sweep   { background: var(--accent-blue); color: #fff; }
+
+    .tldr-card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .tldr-card-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .tldr-card .code-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .tldr-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(0,229,255,0.04);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .tldr-tip.stealth-tip { border-left-color: var(--accent-purple); background: rgba(179,136,255,0.04); }
+    .tldr-tip.os-tip      { border-left-color: var(--accent-orange); background: rgba(255,183,77,0.04); }
+    .tldr-tip.quick-tip   { border-left-color: var(--accent-green); background: rgba(105,240,174,0.04); }
+    .tldr-tip.sweep-tip   { border-left-color: var(--accent-blue); background: rgba(66,165,245,0.04); }
+
+    .tldr-tip .tip-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .tldr-sudo-note {
+      margin-top: 36px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(179,136,255,0.06));
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .tldr-sudo-note strong {
+      color: var(--accent-cyan);
+    }
+
+    .tldr-sudo-note code {
+      background: var(--bg-tertiary);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      color: var(--accent-green);
+    }
+
+    .tldr-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    .tldr-flag-tag {
+      display: inline-block;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    @media (max-width: 640px) {
+      .tldr-section { padding: 28px 16px; margin-top: 40px; }
+      .tldr-header h2 { font-size: 1.6rem; }
+      .tldr-card { padding: 20px 16px 18px; }
+      .tldr-card-title { font-size: 1.05rem; }
+      .tldr-sudo-note { padding: 16px; font-size: 0.9rem; }
+    }
+
     /* ===== PRINT ===== */
     @media print {
       body { background: #fff; color: #111; }
@@ -653,6 +841,7 @@
       a { color: #0066cc; }
       th { background: #eee; color: #111; }
       td { color: #333; }
+      .tldr-header h2 { -webkit-text-fill-color: #111; background: none; }
     }
   </style>
 </head>
@@ -747,6 +936,13 @@
           <li><a href="#appendix-b">B — Well-Known Ports &amp; Their Services</a></li>
           <li><a href="#appendix-c">C — NSE Script Categories</a></li>
           <li><a href="#appendix-d">D — Glossary of Terms</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-part">
+        <div class="toc-part-title"><a href="#tldr">⚡ TL;DR — 5 Flex Commands</a></div>
+        <ul class="toc-sections">
+          <li><a href="#tldr">In a rush? 5 battle-tested, copy-paste-ready commands</a></li>
         </ul>
       </div>
     </nav>
@@ -2561,9 +2757,170 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
 
     </section>
 
+    <!-- ================================================================ -->
+    <!--                    TL;DR — 5 FLEX COMMANDS                       -->
+    <!-- ================================================================ -->
+    <section class="tldr-section" id="tldr">
+
+      <div class="tldr-header">
+        <h2>⚡ TL;DR — 5 FLEX COMMANDS</h2>
+        <p class="tldr-subtitle">In a rush? Grab these and go. Each one is battle-tested and production-ready.</p>
+      </div>
+
+      <div class="tldr-cards">
+
+        <!-- TLDR Command 1 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number stealth">01</span>
+            <span class="tldr-card-title">🥷 Stealth SYN Scan — Low &amp; Slow</span>
+          </div>
+          <p class="tldr-card-desc">A quiet, under-the-radar scan that avoids tripping IDS/IPS. Uses half-open SYN packets, fragmented payloads, skips DNS resolution, and outputs to all three file formats for documentation.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-T2</span>
+            <span class="tldr-flag-tag">-Pn</span>
+            <span class="tldr-flag-tag">-n</span>
+            <span class="tldr-flag-tag">-f</span>
+            <span class="tldr-flag-tag">--max-retries</span>
+            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">-oA</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -T2 -Pn -n -f --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">45s</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">stealth-scan</span> <span class="cmd-target">TARGET</span></pre>
+          </div>
+          <div class="tldr-tip stealth-tip">
+            <span class="tip-icon">💡</span>
+            <span>Use <code>-T2</code> (polite) for real engagements where stealth matters and IDS evasion is critical. In labs or CTFs, <code>-T3</code> (default/normal) is perfectly fine and noticeably faster. Never use <code>-T4</code> or <code>-T5</code> on stealth-sensitive targets — they're loud and easily flagged.</span>
+          </div>
+        </div>
+
+        <!-- TLDR Command 2 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number recon">02</span>
+            <span class="tldr-card-title">🔍 Full Port Scan + Service Detection + File Output</span>
+          </div>
+          <p class="tldr-card-desc">The workhorse scan. Covers all 65,535 ports, identifies service versions, runs default NSE scripts, filters for open ports only, and saves everything to disk in all formats. This is what you run after initial discovery.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-p-</span>
+            <span class="tldr-flag-tag">-sV</span>
+            <span class="tldr-flag-tag">-sC</span>
+            <span class="tldr-flag-tag">--open</span>
+            <span class="tldr-flag-tag">--max-retries</span>
+            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">-T3</span>
+            <span class="tldr-flag-tag">-vv</span>
+            <span class="tldr-flag-tag">-oA</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p- -sV -sC --open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">5m</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">full-recon</span> <span class="cmd-target">TARGET</span></pre>
+          </div>
+          <div class="tldr-tip">
+            <span class="tip-icon">💡</span>
+            <span>Combine <code>-sV</code> + <code>-sC</code> for comprehensive enumeration — version detection plus safe default scripts. <code>-oA</code> saves <code>.nmap</code> + <code>.xml</code> + <code>.gnmap</code> — always use it so you never lose scan data.</span>
+          </div>
+        </div>
+
+        <!-- TLDR Command 3 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number os">03</span>
+            <span class="tldr-card-title">🖥️ OS Detection + Aggressive Enumeration + All Output Formats</span>
+          </div>
+          <p class="tldr-card-desc">Deep fingerprinting scan with OS detection, aggressive guessing when uncertain, balanced version intensity, default scripts, and explicit output to all three file formats. The go-to command when you need to know exactly what's running.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-O</span>
+            <span class="tldr-flag-tag">--osscan-guess</span>
+            <span class="tldr-flag-tag">-sV</span>
+            <span class="tldr-flag-tag">--version-intensity 5</span>
+            <span class="tldr-flag-tag">-sC</span>
+            <span class="tldr-flag-tag">-p-</span>
+            <span class="tldr-flag-tag">--max-retries</span>
+            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">-oN -oX -oG</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -O --osscan-guess -sV --version-intensity</span> <span class="cmd-value">5</span> <span class="cmd-flag">-sC -p- --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">10m</span> <span class="cmd-flag">-T3 -oN</span> <span class="cmd-value">scan.nmap</span> <span class="cmd-flag">-oX</span> <span class="cmd-value">scan.xml</span> <span class="cmd-flag">-oG</span> <span class="cmd-value">scan.grep</span> <span class="cmd-target">TARGET</span></pre>
+          </div>
+          <div class="tldr-tip os-tip">
+            <span class="tip-icon">💡</span>
+            <span>OS detection (<code>-O</code>) requires <strong>root/sudo</strong> and works best when the target has at least 1 open + 1 closed port. If results are uncertain, <code>--osscan-guess</code> makes Nmap print its best guess with a confidence percentage.</span>
+          </div>
+        </div>
+
+        <!-- TLDR Command 4 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number quick">04</span>
+            <span class="tldr-card-title">⚡ Quick Top-Ports Recon — Fast First Look</span>
+          </div>
+          <p class="tldr-card-desc">Your fast first-look command. Scans the top 1000 most common ports with version detection and default scripts. Perfect for initial triage before committing to a full all-port scan. Verbose output lets you see results in real-time.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-sV</span>
+            <span class="tldr-flag-tag">-sC</span>
+            <span class="tldr-flag-tag">--top-ports 1000</span>
+            <span class="tldr-flag-tag">--open</span>
+            <span class="tldr-flag-tag">--max-retries</span>
+            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">-T3</span>
+            <span class="tldr-flag-tag">-vv</span>
+            <span class="tldr-flag-tag">-oA</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -sC --top-ports</span> <span class="cmd-value">1000</span> <span class="cmd-flag">--open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">2m</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">quick-recon</span> <span class="cmd-target">TARGET</span></pre>
+          </div>
+          <div class="tldr-tip quick-tip">
+            <span class="tip-icon">💡</span>
+            <span>Great for initial triage — run this first, review findings, then follow up with a full <code>-p-</code> scan on interesting hosts. The <code>--top-ports 1000</code> covers ~93% of commonly encountered ports.</span>
+          </div>
+        </div>
+
+        <!-- TLDR Command 5 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number sweep">05</span>
+            <span class="tldr-card-title">🌐 Subnet Sweep + Service Discovery — Network-Wide</span>
+          </div>
+          <p class="tldr-card-desc">Sweep an entire subnet to discover services across all live hosts. Uses top 100 ports for speed, version detection, aggressive timeouts to skip unresponsive hosts, and outputs everything. Ideal for mapping an entire network segment quickly.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-sV</span>
+            <span class="tldr-flag-tag">--top-ports 100</span>
+            <span class="tldr-flag-tag">--open</span>
+            <span class="tldr-flag-tag">--max-retries</span>
+            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">-T3</span>
+            <span class="tldr-flag-tag">-oA</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV --top-ports</span> <span class="cmd-value">100</span> <span class="cmd-flag">--open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">1m</span> <span class="cmd-flag">-T3 -oA</span> <span class="cmd-value">network-sweep</span> <span class="cmd-target">TARGET_SUBNET/24</span></pre>
+          </div>
+          <div class="tldr-tip sweep-tip">
+            <span class="tip-icon">💡</span>
+            <span>For large networks (e.g., /16), reduce <code>--top-ports</code> to <code>20</code> and tighten <code>--host-timeout</code> to <code>30s</code> to keep scan times manageable. You can always do deeper per-host scans on interesting findings.</span>
+          </div>
+        </div>
+
+      </div><!-- /.tldr-cards -->
+
+      <div class="tldr-sudo-note">
+        💡 <strong>Pro Tip:</strong> Running these commands with <code>sudo</code> enables SYN scan (<code>-sS</code>), OS detection (<code>-O</code>), and raw socket access — resulting in <strong>faster</strong>, <strong>stealthier</strong>, and <strong>more accurate</strong> scans. Without <code>sudo</code>, Nmap falls back to the slower TCP connect scan (<code>-sT</code>).
+      </div>
+
+    </section>
+
     <!-- ============ FOOTER ============ -->
     <footer class="footer">
-      <p>🛡️ Nmap Recon Playbook — Built by Loki</p>
+      <p>🛡️ Nmap Recon Playbook — Built by <a href="https://github.com/UnExplainableFish52" target="_blank">UnExplainableFish52</a></p>
       <p>Use responsibly. Always get authorization. Stay ethical.</p>
       <p style="margin-top:8px; font-size:0.7rem; color:var(--text-muted)">Last updated: February 2026</p>
     </footer>
