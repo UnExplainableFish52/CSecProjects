@@ -194,6 +194,22 @@
       border-color: var(--accent-blue);
     }
 
+    .btn.tldr-btn {
+      background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(179,136,255,0.1));
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(0,229,255,0.1);
+    }
+
+    .btn.tldr-btn:hover {
+      background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(179,136,255,0.2));
+      color: #fff;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 20px rgba(255,183,77,0.3);
+      transform: translateY(-1px);
+    }
+
     /* ===== TABLE OF CONTENTS ===== */
     .toc-card {
       background: var(--bg-secondary);
@@ -732,6 +748,7 @@
       flex-shrink: 0;
     }
 
+    .tldr-card-number.foundation { background: var(--text-muted); color: var(--bg-primary); }
     .tldr-card-number.stealth { background: var(--accent-purple); color: #fff; }
     .tldr-card-number.recon   { background: var(--accent-cyan); }
     .tldr-card-number.os      { background: var(--accent-orange); color: var(--bg-primary); }
@@ -768,6 +785,7 @@
       line-height: 1.7;
     }
 
+    .tldr-tip.foundation-tip { border-left-color: var(--text-muted); background: rgba(153,161,179,0.06); }
     .tldr-tip.stealth-tip { border-left-color: var(--accent-purple); background: rgba(179,136,255,0.04); }
     .tldr-tip.os-tip      { border-left-color: var(--accent-orange); background: rgba(255,183,77,0.04); }
     .tldr-tip.quick-tip   { border-left-color: var(--accent-green); background: rgba(105,240,174,0.04); }
@@ -864,6 +882,7 @@
     <div class="global-controls">
       <button class="btn" onclick="expandAll()">⊞ Expand All</button>
       <button class="btn" onclick="collapseAll()">⊟ Collapse All</button>
+      <a href="#tldr" class="btn tldr-btn" style="text-decoration: none; display: inline-block;">⚡ Jump to TL;DR</a>
     </div>
 
     <!-- ============ TABLE OF CONTENTS ============ -->
@@ -2769,13 +2788,39 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
 
       <div class="tldr-cards">
 
+        <!-- TLDR Command 00 -->
+        <div class="tldr-card">
+          <div class="tldr-card-header">
+            <span class="tldr-card-number foundation">00</span>
+            <span class="tldr-card-title">🧱 The Foundation — Build Your Own</span>
+          </div>
+          <p class="tldr-card-desc">The perfect starting point for any custom scan. This gives you the core scanning logic, allowing you to easily add or tweak flags to meet your specific target's needs without starting from scratch.</p>
+          <div class="tldr-flags">
+            <span class="tldr-flag-tag">-sS</span>
+            <span class="tldr-flag-tag">-p 1-1000</span>
+            <span class="tldr-flag-tag">-sV</span>
+            <span class="tldr-flag-tag">--version-intensity 5</span>
+            <span class="tldr-flag-tag">-oA</span>
+            <span class="tldr-flag-tag">--stats-every</span>
+            <span class="tldr-flag-tag">-T4</span>
+          </div>
+          <div class="code-wrapper">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p</span> <span class="cmd-value">1-1000</span> <span class="cmd-flag">-sV --version-intensity</span> <span class="cmd-value">5</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">foundation-scan</span> <span class="cmd-flag">--stats-every</span> <span class="cmd-value">10s</span> <span class="cmd-flag">-T4</span> <span class="cmd-target">TARGET</span></pre>
+          </div>
+          <div class="tldr-tip foundation-tip">
+            <span class="tip-icon">💡</span>
+            <span>Version intensity (<code>--version-intensity</code>) goes from 0 to 9. A value of <code>5</code> provides a great middle ground for speed vs accuracy. Tweak <code>-T4</code> down to <code>-T3</code> if you need to be less aggressive.</span>
+          </div>
+        </div>
+
         <!-- TLDR Command 1 -->
         <div class="tldr-card">
           <div class="tldr-card-header">
             <span class="tldr-card-number stealth">01</span>
             <span class="tldr-card-title">🥷 Stealth SYN Scan — Low &amp; Slow</span>
           </div>
-          <p class="tldr-card-desc">A quiet, under-the-radar scan that avoids tripping IDS/IPS. Uses half-open SYN packets, fragmented payloads, skips DNS resolution, and outputs to all three file formats for documentation.</p>
+          <p class="tldr-card-desc">A quiet, under-the-radar scan that avoids tripping IDS/IPS. Uses half-open SYN packets, fragmented payloads, skips DNS resolution, and outputs to all three file formats. Progress tracking added for those long waits.</p>
           <div class="tldr-flags">
             <span class="tldr-flag-tag">-sS</span>
             <span class="tldr-flag-tag">-T2</span>
@@ -2783,12 +2828,12 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
             <span class="tldr-flag-tag">-n</span>
             <span class="tldr-flag-tag">-f</span>
             <span class="tldr-flag-tag">--max-retries</span>
-            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">--stats-every</span>
             <span class="tldr-flag-tag">-oA</span>
           </div>
           <div class="code-wrapper">
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -T2 -Pn -n -f --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">45s</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">stealth-scan</span> <span class="cmd-target">TARGET</span></pre>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -T2 -Pn -n -f --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--stats-every</span> <span class="cmd-value">60s</span> <span class="cmd-flag">-oA</span> <span class="cmd-value">stealth-scan</span> <span class="cmd-target">TARGET</span></pre>
           </div>
           <div class="tldr-tip stealth-tip">
             <span class="tip-icon">💡</span>
@@ -2800,9 +2845,9 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
         <div class="tldr-card">
           <div class="tldr-card-header">
             <span class="tldr-card-number recon">02</span>
-            <span class="tldr-card-title">🔍 Full Port Scan + Service Detection + File Output</span>
+            <span class="tldr-card-title">🔍 Full Port Scan + Service Detection + Status Tracking</span>
           </div>
-          <p class="tldr-card-desc">The workhorse scan. Covers all 65,535 ports, identifies service versions, runs default NSE scripts, filters for open ports only, and saves everything to disk in all formats. This is what you run after initial discovery.</p>
+          <p class="tldr-card-desc">The stable workhorse scan for thorough enumeration. Covers all 65,535 ports, identifies service versions, runs default NSE scripts, filters for open ports only, and provides timed status updates so you're never left guessing.</p>
           <div class="tldr-flags">
             <span class="tldr-flag-tag">-sS</span>
             <span class="tldr-flag-tag">-p-</span>
@@ -2810,18 +2855,18 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
             <span class="tldr-flag-tag">-sC</span>
             <span class="tldr-flag-tag">--open</span>
             <span class="tldr-flag-tag">--max-retries</span>
-            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">--stats-every</span>
             <span class="tldr-flag-tag">-T3</span>
             <span class="tldr-flag-tag">-vv</span>
             <span class="tldr-flag-tag">-oA</span>
           </div>
           <div class="code-wrapper">
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p- -sV -sC --open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">5m</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">full-recon</span> <span class="cmd-target">TARGET</span></pre>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -p- -sV -sC --open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--stats-every</span> <span class="cmd-value">10s</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">full-recon</span> <span class="cmd-target">TARGET</span></pre>
           </div>
           <div class="tldr-tip">
             <span class="tip-icon">💡</span>
-            <span>Combine <code>-sV</code> + <code>-sC</code> for comprehensive enumeration — version detection plus safe default scripts. <code>-oA</code> saves <code>.nmap</code> + <code>.xml</code> + <code>.gnmap</code> — always use it so you never lose scan data.</span>
+            <span>Combine <code>-sV</code> + <code>-sC</code> for comprehensive enumeration. Adding <code>--stats-every 10s</code> (or just pressing the Spacebar/Enter key during a scan) is an absolute lifesaver for these long-running scans.</span>
           </div>
         </div>
 
@@ -2829,28 +2874,27 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
         <div class="tldr-card">
           <div class="tldr-card-header">
             <span class="tldr-card-number os">03</span>
-            <span class="tldr-card-title">🖥️ OS Detection + Aggressive Enumeration + All Output Formats</span>
+            <span class="tldr-card-title">🔥 Aggressive Pentest / CTF Scan — Loud &amp; Fast</span>
           </div>
-          <p class="tldr-card-desc">Deep fingerprinting scan with OS detection, aggressive guessing when uncertain, balanced version intensity, default scripts, and explicit output to all three file formats. The go-to command when you need to know exactly what's running.</p>
+          <p class="tldr-card-desc">When you don't care about stealth, are running a CTF, or just need answers yesterday. Forces extreme speed with a minimum packet rate and aggregates OS detection, version checks, scripts, and traceroute via the `-A` flag.</p>
           <div class="tldr-flags">
             <span class="tldr-flag-tag">-sS</span>
-            <span class="tldr-flag-tag">-O</span>
-            <span class="tldr-flag-tag">--osscan-guess</span>
-            <span class="tldr-flag-tag">-sV</span>
-            <span class="tldr-flag-tag">--version-intensity 5</span>
-            <span class="tldr-flag-tag">-sC</span>
+            <span class="tldr-flag-tag">-A</span>
             <span class="tldr-flag-tag">-p-</span>
+            <span class="tldr-flag-tag">--min-rate</span>
             <span class="tldr-flag-tag">--max-retries</span>
-            <span class="tldr-flag-tag">--host-timeout</span>
-            <span class="tldr-flag-tag">-oN -oX -oG</span>
+            <span class="tldr-flag-tag">--stats-every</span>
+            <span class="tldr-flag-tag">-T4</span>
+            <span class="tldr-flag-tag">-vv</span>
+            <span class="tldr-flag-tag">-oA</span>
           </div>
           <div class="code-wrapper">
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -O --osscan-guess -sV --version-intensity</span> <span class="cmd-value">5</span> <span class="cmd-flag">-sC -p- --max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">10m</span> <span class="cmd-flag">-T3 -oN</span> <span class="cmd-value">scan.nmap</span> <span class="cmd-flag">-oX</span> <span class="cmd-value">scan.xml</span> <span class="cmd-flag">-oG</span> <span class="cmd-value">scan.grep</span> <span class="cmd-target">TARGET</span></pre>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -A -p- --min-rate</span> <span class="cmd-value">1000</span> <span class="cmd-flag">--max-retries</span> <span class="cmd-value">2</span> <span class="cmd-flag">--stats-every</span> <span class="cmd-value">10s</span> <span class="cmd-flag">-T4 -vv -oA</span> <span class="cmd-value">aggressive-ctf</span> <span class="cmd-target">TARGET</span></pre>
           </div>
           <div class="tldr-tip os-tip">
             <span class="tip-icon">💡</span>
-            <span>OS detection (<code>-O</code>) requires <strong>root/sudo</strong> and works best when the target has at least 1 open + 1 closed port. If results are uncertain, <code>--osscan-guess</code> makes Nmap print its best guess with a confidence percentage.</span>
+            <span>The <code>-A</code> flag is a powerful shortcut for <code>-O -sV -sC --traceroute</code>. Paired with <code>-T4</code> and <code>--min-rate 1000</code>, this scan will tear through ports quickly. <strong>Beware:</strong> It generates immense noise and will trigger every IDS/IPS sensor immediately.</span>
           </div>
         </div>
 
@@ -2867,15 +2911,14 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
             <span class="tldr-flag-tag">-sC</span>
             <span class="tldr-flag-tag">--top-ports 1000</span>
             <span class="tldr-flag-tag">--open</span>
-            <span class="tldr-flag-tag">--max-retries</span>
-            <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">--stats-every</span>
             <span class="tldr-flag-tag">-T3</span>
             <span class="tldr-flag-tag">-vv</span>
             <span class="tldr-flag-tag">-oA</span>
           </div>
           <div class="code-wrapper">
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -sC --top-ports</span> <span class="cmd-value">1000</span> <span class="cmd-flag">--open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">2m</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">quick-recon</span> <span class="cmd-target">TARGET</span></pre>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV -sC --top-ports</span> <span class="cmd-value">1000</span> <span class="cmd-flag">--open --stats-every</span> <span class="cmd-value">5s</span> <span class="cmd-flag">-T3 -vv -oA</span> <span class="cmd-value">quick-recon</span> <span class="cmd-target">TARGET</span></pre>
           </div>
           <div class="tldr-tip quick-tip">
             <span class="tip-icon">💡</span>
@@ -2897,12 +2940,13 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
             <span class="tldr-flag-tag">--open</span>
             <span class="tldr-flag-tag">--max-retries</span>
             <span class="tldr-flag-tag">--host-timeout</span>
+            <span class="tldr-flag-tag">--stats-every</span>
             <span class="tldr-flag-tag">-T3</span>
             <span class="tldr-flag-tag">-oA</span>
           </div>
           <div class="code-wrapper">
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV --top-ports</span> <span class="cmd-value">100</span> <span class="cmd-flag">--open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">1m</span> <span class="cmd-flag">-T3 -oA</span> <span class="cmd-value">network-sweep</span> <span class="cmd-target">TARGET_SUBNET/24</span></pre>
+            <pre><span class="cmd-root">sudo nmap</span> <span class="cmd-flag">-sS -sV --top-ports</span> <span class="cmd-value">100</span> <span class="cmd-flag">--open --max-retries</span> <span class="cmd-value">1</span> <span class="cmd-flag">--host-timeout</span> <span class="cmd-value">1m</span> <span class="cmd-flag">--stats-every</span> <span class="cmd-value">15s</span> <span class="cmd-flag">-T3 -oA</span> <span class="cmd-value">network-sweep</span> <span class="cmd-target">TARGET_SUBNET/24</span></pre>
           </div>
           <div class="tldr-tip sweep-tip">
             <span class="tip-icon">💡</span>
@@ -2912,8 +2956,9 @@ Output File:   scans/full-syn-192.168.1.0-20260222.nmap
 
       </div><!-- /.tldr-cards -->
 
-      <div class="tldr-sudo-note">
-        💡 <strong>Pro Tip:</strong> Running these commands with <code>sudo</code> enables SYN scan (<code>-sS</code>), OS detection (<code>-O</code>), and raw socket access — resulting in <strong>faster</strong>, <strong>stealthier</strong>, and <strong>more accurate</strong> scans. Without <code>sudo</code>, Nmap falls back to the slower TCP connect scan (<code>-sT</code>).
+      <div class="tldr-sudo-note" style="text-align: left;">
+        <p style="margin-bottom: 12px;">💡 <strong>Pro Tip 1 — Sudo Matters:</strong> Running these commands with <code>sudo</code> enables SYN scan (<code>-sS</code>), OS detection (<code>-O</code>/-<code>A</code>), and raw socket access — resulting in <strong>faster</strong>, <strong>stealthier</strong>, and <strong>more accurate</strong> scans. Without <code>sudo</code>, Nmap falls back to the slower TCP connect scan (<code>-sT</code>).</p>
+        <p>💡 <strong>Pro Tip 2 — Status Tracking:</strong> Never guess if your terminal is frozen. Appending <code>--stats-every 10s</code> to any long scan (or just hitting <strong>Spacebar / Enter</strong> mid-scan) produces real-time ETAs, completion percentages, and network timing info.</p>
       </div>
 
     </section>
