@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Analyst - 5-Day Firewall & Log Analysis Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(22, 22, 36, 0.95);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0, 255, 255, 0.1);
+        }
+        
+        h1 {
+            color: #00ffff;
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        
+        h2 {
+            color: #00ffff;
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #00ffff;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p, li {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .goal-box {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 5px solid #00ffff;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .day-card {
+            background: rgba(0, 212, 255, 0.05);
+            border: 2px solid #00d4ff;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .day-card:hover {
+            transform: translateX(10px);
+            border-color: #ffd700;
+        }
+        
+        code {
+            color: #00ff00;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 1em;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: transparent;
+            padding: 0;
+        }
+        
+        ul {
+            margin-left: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin: 10px 0;
+            list-style-type: none;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        li:before {
+            content: "▸";
+            color: #00ffff;
+            position: absolute;
+            left: 0;
+            font-size: 1.3em;
+        }
+        
+        .deliverable {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 5px solid #ffd700;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        
+        .deliverable strong {
+            color: #ffd700;
+            font-size: 1.15em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            font-weight: bold;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.15em;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #ff6b6b;
+            font-weight: bold;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-left: 5px solid #ff6b6b;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        
+        .success {
+            color: #51cf66;
+            font-weight: bold;
+            background: rgba(81, 207, 102, 0.1);
+            padding: 15px;
+            border-left: 5px solid #51cf66;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+        
+        .intro {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
+        .timeline {
+            color: #ff79c6;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .abbr {
+            color: #bd93f9;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ SOC Analyst Firewall Mastery</h1>
+        <p class="intro">5-Day Intensive Training Plan for loki</p>
+        <p class="intro timeline">March 8 - March 12, 2026</p>
+
+        <div class="goal-box">
+            <h3>🎯 Mission Objective</h3>
+            <p>By Day 5, you will be able to:</p>
+            <ul>
+                <li>Install, configure, and manage enterprise firewalls (Windows + Linux)</li>
+                <li>Set up centralized log collection using <span class="abbr">SIEM</span> tools</li>
+                <li>Detect network attacks from firewall logs</li>
+                <li>Block malicious IPs, ports, and geographical locations</li>
+                <li>Explain your SOC workflow confidently in job interviews</li>
+            </ul>
+        </div>
+
+        <h2>📚 Key Abbreviations & Terms</h2>
+        <table>
+            <tr>
+                <th>Term</th>
+                <th>Full Form / Meaning</th>
+            </tr>
+            <tr>
+                <td><span class="abbr">SOC</span></td>
+                <td>Security Operations Center — team that monitors and responds to security incidents</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">SIEM</span></td>
+                <td>Security Information and Event Management — collects, analyzes, and alerts on security logs</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">pfSense</span></td>
+                <td>Open-source firewall/router software based on FreeBSD — industry standard</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">NAT</span></td>
+                <td>Network Address Translation — maps internal IPs to external IPs</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">SPL</span></td>
+                <td>Search Processing Language — query language for Splunk</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">KQL</span></td>
+                <td>Kibana Query Language — query language for Elasticsearch/Kibana</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">ELK Stack</span></td>
+                <td>Elasticsearch + Logstash + Kibana — open-source SIEM alternative</td>
+            </tr>
+            <tr>
+                <td><span class="abbr">DoS</span></td>
+                <td>Denial of Service — attack that floods a target to make it unavailable</td>
+            </tr>
+        </table>
+
+        <h2>📅 The 5-Day Breakdown</h2>
+
+        <!-- DAY 1 -->
+        <div class="day-card">
+            <h2>Day 1: Firewall Fundamentals + Hands-On Setup</h2>
+            <p class="timeline">⏱️ Estimated Time: 2.5 - 3 hours</p>
+
+            <h3>🎓 What You'll Learn</h3>
+            <ul>
+                <li>Firewall theory: types, zones, stateful vs stateless</li>
+                <li>Install pfSense in VirtualBox</li>
+                <li>Set up network topology: Kali ↔ pfSense ↔ Windows</li>
+                <li>Create and test basic firewall rules</li>
+            </ul>
+
+            <h3>📖 Theory Speedrun (15 minutes)</h3>
+            
+            <h4>What is a Firewall?</h4>
+            <p>A firewall is a <span class="highlight">network security device</span> that monitors and controls incoming and outgoing network traffic based on predetermined security rules.</p>
+
+            <h4>Types of Firewalls</h4>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>How It Works</th>
+                </tr>
+                <tr>
+                    <td>Packet Filtering</td>
+                    <td>Inspects packets, allows/blocks based on IP, port, protocol</td>
+                </tr>
+                <tr>
+                    <td>Stateful Inspection</td>
+                    <td>Tracks connection state, smarter decisions</td>
+                </tr>
+                <tr>
+                    <td>Proxy Firewall</td>
+                    <td>Acts as intermediary, inspects application-layer data</td>
+                </tr>
+                <tr>
+                    <td>Next-Gen (NGFW)</td>
+                    <td>Deep packet inspection + IPS + app awareness</td>
+                </tr>
+            </table>
+
+            <h4>Stateful vs Stateless</h4>
+            <ul>
+                <li><span class="highlight">Stateless:</span> Each packet judged independently (fast but dumb)</li>
+                <li><span class="highlight">Stateful:</span> Remembers connection context (slower but smart)</li>
+            </ul>
+
+            <h4>Firewall Zones</h4>
+            <ul>
+                <li><span class="highlight">WAN:</span> Wide Area Network (internet-facing, untrusted)</li>
+                <li><span class="highlight">LAN:</span> Local Area Network (internal, trusted)</li>
+                <li><span class="highlight">DMZ:</span> Demilitarized Zone (public-facing servers, semi-trusted)</li>
+            </ul>
+
+            <h3>🛠️ Step 1: Download pfSense (10 minutes)</h3>
+            <ul>
+                <li>Go to: <code>https://www.pfsense.org/download/</code></li>
+                <li>Select: <span class="highlight">Architecture:</span> AMD64 (64-bit)</li>
+                <li>Select: <span class="highlight">Installer:</span> DVD Image (ISO)</li>
+                <li>Download the <code>.iso.gz</code> file</li>
+                <li>Extract it to get the <code>.iso</code> file</li>
+            </ul>
+
+            <h3>🖥️ Step 2: Create pfSense VM in VirtualBox (20 minutes)</h3>
+            <pre><code>1. Open VirtualBox → New
+2. Name: pfSense-Firewall
+3. Type: BSD
+4. Version: FreeBSD (64-bit)
+5. RAM: 2048 MB (2 GB minimum)
+6. Hard Disk: Create virtual hard disk (20 GB, VDI, Dynamically allocated)
+7. Settings → System → Enable EFI (if needed)
+8. Settings → Storage → Add the pfSense ISO to optical drive
+9. Settings → Network:
+   - Adapter 1: NAT (WAN - internet)
+   - Adapter 2: Internal Network, Name: "LAN_Network" (LAN - internal)</code></pre>
+
+            <div class="warning">
+                <strong>⚠️ Critical:</strong> pfSense needs 2 network adapters. Adapter 1 = WAN (internet), Adapter 2 = LAN (internal network).
+            </div>
+
+            <h3>⚙️ Step 3: Install pfSense (20 minutes)</h3>
+            <pre><code>1. Start the VM
+2. Wait for boot menu → select "Boot Multi User" (or wait for auto-boot)
+3. Accept all defaults during installation
+4. Select "Install pfSense"
+5. Keymap: Select your keyboard layout
+6. Partitioning: Auto (ZFS) → Stripe → select disk → YES
+7. Wait for installation to complete
+8. Reboot when prompted (remove ISO first)
+9. After reboot:
+   - WAN interface: em0 (or vtnet0)
+   - LAN interface: em1 (or vtnet1)
+   - Confirm: y</code></pre>
+
+            <h3>🔗 Step 4: Configure Kali + Windows VMs (30 minutes)</h3>
+            <p><span class="highlight">Kali VM Network Settings:</span></p>
+            <pre><code>VirtualBox → Kali → Settings → Network
+- Adapter 1: Internal Network, Name: "LAN_Network"
+- Start Kali
+- Check IP: ip addr show
+- Should get IP like 192.168.1.x from pfSense DHCP</code></pre>
+
+            <p><span class="highlight">Windows VM Network Settings:</span></p>
+            <pre><code>VirtualBox → Windows → Settings → Network
+- Adapter 1: Internal Network, Name: "LAN_Network"
+- Start Windows
+- Check IP: ipconfig
+- Should get IP like 192.168.1.x</code></pre>
+
+            <h3>🔥 Step 5: Access pfSense Web Interface (15 minutes)</h3>
+            <pre><code># From Kali or Windows browser:
+http://192.168.1.1
+
+# Default credentials:
+Username: admin
+Password: pfsense</code></pre>
+
+            <p><span class="highlight">Setup Wizard:</span></p>
+            <ul>
+                <li>Next → Next</li>
+                <li>Hostname: firewall</li>
+                <li>Domain: localdomain</li>
+                <li>Primary DNS: 8.8.8.8</li>
+                <li>Secondary DNS: 8.8.4.4</li>
+                <li>Timezone: Your timezone</li>
+                <li>WAN: Keep defaults (DHCP from VirtualBox NAT)</li>
+                <li>LAN IP: 192.168.1.1 / 24</li>
+                <li>Set new admin password (CHANGE THIS!)</li>
+                <li>Finish → Reload</li>
+            </ul>
+
+            <h3>🛡️ Step 6: Create Your First Firewall Rules (30 minutes)</h3>
+            <p>Go to: <code>Firewall → Rules → LAN</code></p>
+
+            <h4>Rule 1: Block All Traffic (Default Deny)</h4>
+            <pre><code>Action: Block
+Interface: LAN
+Protocol: Any
+Source: Any
+Destination: Any
+Description: Default Deny All</code></pre>
+
+            <h4>Rule 2: Allow DNS</h4>
+            <pre><code>Action: Pass
+Interface: LAN
+Protocol: TCP/UDP
+Source: LAN net
+Destination: Any
+Destination Port: 53
+Description: Allow DNS</code></pre>
+
+            <h4>Rule 3: Allow HTTP/HTTPS</h4>
+            <pre><code>Action: Pass
+Interface: LAN
+Protocol: TCP
+Source: LAN net
+Destination: Any
+Destination Port: 80, 443
+Description: Allow Web Traffic</code></pre>
+
+            <div class="success">
+                <strong>✅ Rule Order Matters:</strong> pfSense processes rules top-to-bottom, first match wins. Always put specific rules BEFORE general rules.
+            </div>
+
+            <h3>✅ Step 7: Test & Verify (20 minutes)</h3>
+            <p>From Kali:</p>
+            <pre><code># Test DNS
+nslookup google.com
+
+# Test HTTP
+curl http://example.com
+
+# Test ICMP (ping) - should FAIL if not allowed
+ping 8.8.8.8
+
+# Test SSH - should FAIL
+nmap -p 22 8.8.8.8</code></pre>
+
+            <div class="deliverable">
+                <strong>📦 Day 1 Deliverable:</strong> Working pfSense firewall between Kali and Windows VMs, with 3+ firewall rules blocking and allowing specific traffic.
+            </div>
+
+            <h3>✅ Day 1 Checkpoint Quiz</h3>
+            <ul>
+                <li>What's the difference between stateful and stateless firewalls?</li>
+                <li>What are the 3 main firewall zones?</li>
+                <li>Why does rule order matter in pfSense?</li>
+                <li>What ports are used for HTTP and HTTPS?</li>
+            </ul>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-card">
+            <h2>Day 2: Advanced Rule Configuration + Traffic Filtering</h2>
+            <p class="timeline">⏱️ Estimated Time: 2.5 - 3 hours</p>
+
+            <h3>🎓 What You'll Learn</h3>
+            <ul>
+                <li>Deep dive into rule syntax and matching logic</li>
+                <li>Port-based filtering (SSH, RDP, FTP, etc.)</li>
+                <li>NAT and port forwarding</li>
+                <li>Test rules with offensive tools</li>
+            </ul>
+
+            <h3>📖 Understanding Firewall Rule Components</h3>
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>What It Does</th>
+                </tr>
+                <tr>
+                    <td>Action</td>
+                    <td>Pass (allow), Block (deny silently), Reject (deny with response)</td>
+                </tr>
+                <tr>
+                    <td>Interface</td>
+                    <td>Which interface traffic is coming FROM</td>
+                </tr>
+                <tr>
+                    <td>Protocol</td>
+                    <td>TCP, UDP, ICMP, ANY</td>
+                </tr>
+                <tr>
+                    <td>Source</td>
+                    <td>Where traffic originates (IP, network, any)</td>
+                </tr>
+                <tr>
+                    <td>Destination</td>
+                    <td>Where traffic is going (IP, network, any)</td>
+                </tr>
+                <tr>
+                    <td>Port</td>
+                    <td>Specific service port (22=SSH, 3389=RDP, 80=HTTP)</td>
+                </tr>
+            </table>
+
+            <h3>🔥 10 Real SOC Firewall Rules</h3>
+
+            <h4>Rule 1: Block All Inbound RDP from WAN</h4>
+            <pre><code>Action: Block
+Interface: WAN
+Protocol: TCP
+Source: Any
+Destination: Any
+Destination Port: 3389
+Description: Block External RDP Brute Force Attempts</code></pre>
+            <p><span class="highlight">Why:</span> RDP is heavily targeted for brute force attacks.</p>
+
+            <h4>Rule 2: Block All Inbound SSH from WAN</h4>
+            <pre><code>Action: Block
+Interface: WAN
+Protocol: TCP
+Source: Any
+Destination: Any
+Destination Port: 22
+Description: Block External SSH Access</code></pre>
+
+            <h4>Rule 3: Allow Outbound DNS Only to Trusted DNS Servers</h4>
+            <pre><code>Action: Pass
+Interface: LAN
+Protocol: UDP
+Source: LAN net
+Destination: 8.8.8.8, 1.1.1.1
+Destination Port: 53
+Description: Allow DNS to Google/Cloudflare Only</code></pre>
+
+            <h4>Rule 4: Block Tor Exit Nodes (Using Alias)</h4>
+            <pre><code># First create alias: Firewall → Aliases → IP
+# Name: TorExitNodes
+# Type: URL (IPs)
+# URL: https://check.torproject.org/torbulkexitlist
+
+# Then create rule:
+Action: Block
+Interface: WAN
+Protocol: Any
+Source: TorExitNodes (alias)
+Destination: Any
+Description: Block Tor Traffic</code></pre>
+
+            <h4>Rule 5: Rate Limit ICMP (Prevent Ping Floods)</h4>
+            <pre><code>Action: Pass
+Interface: WAN
+Protocol: ICMP
+Source: Any
+Destination: WAN address
+Advanced → Max States: 10
+Description: Rate Limit ICMP</code></pre>
+
+            <h4>Rule 6: Allow HTTP/HTTPS Only to Web Servers</h4>
+            <pre><code>Action: Pass
+Interface: LAN
+Protocol: TCP
+Source: LAN net
+Destination: Any
+Destination Port: 80, 443
+Description: Allow Web Browsing</code></pre>
+
+            <h4>Rule 7: Block Outbound Telnet (Insecure Protocol)</h4>
+            <pre><code>Action: Block
+Interface: LAN
+Protocol: TCP
+Source: LAN net
+Destination: Any
+Destination Port: 23
+Description: Block Insecure Telnet Protocol</code></pre>
+
+            <h4>Rule 8: Allow NTP (Time Sync)</h4>
+            <pre><code>Action: Pass
+Interface: LAN
+Protocol: UDP
+Source: LAN net
+Destination: Any
+Destination Port: 123
+Description: Allow Network Time Protocol</code></pre>
+
+            <h4>Rule 9: Block All IPv6 (If Not Used)</h4>
+            <pre><code>Action: Block
+Interface: WAN
+Protocol: IPv6
+Source: Any
+Destination: Any
+Description: Block IPv6 Traffic</code></pre>
+
+            <h4>Rule 10: Log All Blocked Traffic</h4>
+            <pre><code># For ANY block rule, enable:
+☑️ Log packets that are handled by this rule
+
+# View logs: Status → System Logs → Firewall</code></pre>
+
+            <h3>🔧 NAT & Port Forwarding</h3>
+
+            <h4>Scenario: Forward External Port 8080 to Internal Web Server</h4>
+            <pre><code>Firewall → NAT → Port Forward → Add
+
+Interface: WAN
+Protocol: TCP
+Destination: WAN address
+Destination Port: 8080
+Redirect Target IP: 192.168.1.100 (internal server)
+Redirect Target Port: 80
+Description: Forward Web Traffic to Internal Server
+
+Save → Apply</code></pre>
+
+            <div class="success">
+                <strong>✅ NAT Auto-Rule:</strong> pfSense automatically creates a matching firewall rule when you add port forwarding. Check Firewall → Rules → WAN.
+            </div>
+
+            <h3>🧪 Testing Your Rules with Kali</h3>
+
+            <h4>Test 1: Port Scan Detection</h4>
+            <pre><code># From Kali, scan your Windows VM through pfSense:
+nmap -sS -p 1-1000 192.168.1.100
+
+# Check pfSense logs:
+Status → System Logs → Firewall
+# Look for blocked connection attempts</code></pre>
+
+            <h4>Test 2: SSH Blocking</h4>
+            <pre><code># Try to SSH to external server:
+ssh user@example.com
+
+# Should timeout if blocked
+# Check pfSense: Diagnostics → States
+# Should NOT see SSH connections if blocked</code></pre>
+
+            <h4>Test 3: HTTP/HTTPS Allowed</h4>
+            <pre><code>curl -I https://google.com
+# Should return HTTP 200 or 301</code></pre>
+
+            <h4>Test 4: ICMP Rate Limiting</h4>
+            <pre><code># Flood ping:
+ping -f 8.8.8.8
+
+# Check pfSense logs - should see drops after limit</code></pre>
+
+            <div class="deliverable">
+                <strong>📦 Day 2 Deliverable:</strong> 10+ firewall rules covering real SOC scenarios, tested and verified with nmap/curl. NAT port forwarding configured.
+            </div>
+
+            <h3>✅ Day 2 Checkpoint Quiz</h3>
+            <ul>
+                <li>What's the difference between Block and Reject?</li>
+                <li>Why block RDP from WAN?</li>
+                <li>What is NAT and why is it used?</li>
+                <li>How do you verify a rule is working?</li>
+            </ul>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-card">
+            <h2>Day 3: Log Collection + SIEM Setup</h2>
+            <p class="timeline">⏱️ Estimated Time: 3 - 4 hours</p>
+
+            <h3>🎓 What You'll Learn</h3>
+            <ul>
+                <li>Enable comprehensive logging on pfSense</li>
+                <li>Set up Syslog server</li>
+                <li>Install Splunk Free or ELK Stack</li>
+                <li>Forward pfSense logs to SIEM</li>
+                <li>Create your first security dashboard</li>
+            </ul>
+
+            <h3>📖 Why Log Collection Matters</h3>
+            <p>In a SOC, <span class="highlight">logs are your evidence</span>. Without centralized logging:</p>
+            <ul>
+                <li>You can't detect attacks</li>
+                <li>You can't prove compliance</li>
+                <li>You can't investigate incidents</li>
+                <li>You can't correlate events across systems</li>
+            </ul>
+
+            <h3>🛠️ Step 1: Enable Logging on pfSense (15 minutes)</h3>
+            <pre><code>Status → System Logs → Settings
+
+☑️ Log packets matched from the default block rules
+☑️ Log packets matched from the default pass rules
+☑️ Log packets blocked by 'Block Bogon Networks' rules
+☑️ Log packets blocked by 'Block Private Networks' rules
+
+Web Server Log: ☑️ Log web server errors
+GUI Log: ☑️ Log successful logins
+GUI Log: ☑️ Log failed logins
+
+Save</code></pre>
+
+            <h3>🔧 Step 2: Configure Remote Syslog (20 minutes)</h3>
+            <pre><code>Status → System Logs → Settings → Remote Logging
+
+☑️ Enable Remote Logging
+
+Remote Log Servers:
+  Server 1: 192.168.1.50:514 (your SIEM server IP)
+  
+Remote Syslog Contents:
+  ☑️ Everything
+
+Save</code></pre>
+
+            <div class="warning">
+                <strong>⚠️ Note:</strong> 192.168.1.50 is your Kali VM where we'll install the SIEM. Adjust to your actual IP.
+            </div>
+
+            <h3>🖥️ Option A: Install Splunk Free (Easier, Recommended for Beginners)</h3>
+
+            <h4>Step 1: Download Splunk on Kali</h4>
+            <pre><code># Download Splunk Free (requires account creation):
+# Go to: https://www.splunk.com/en_us/download/splunk-enterprise.html
+# Select: Linux (.deb for Debian/Kali)
+
+# Or use wget (example URL, get latest):
+wget -O splunk.deb 'https://download.splunk.com/products/splunk/releases/9.x.x/linux/splunk-9.x.x-linux-amd64.deb'</code></pre>
+
+            <h4>Step 2: Install Splunk</h4>
+            <pre><code>sudo dpkg -i splunk.deb
+
+# Start Splunk
+cd /opt/splunk/bin
+sudo ./splunk start --accept-license
+
+# Create admin account when prompted:
+# Username: admin
+# Password: (create strong password)
+
+# Enable boot-start:
+sudo ./splunk enable boot-start</code></pre>
+
+            <h4>Step 3: Access Splunk Web Interface</h4>
+            <pre><code># From browser (on Kali or Windows VM):
+http://192.168.1.50:8000
+
+# Login with admin credentials</code></pre>
+
+            <h4>Step 4: Configure Syslog Input in Splunk</h4>
+            <pre><code>Settings → Data Inputs → UDP → Add New
+
+Port: 514
+Source name override: pfsense
+Source type: syslog
+Index: main (default)
+
+Save</code></pre>
+
+            <h4>Step 5: Verify Logs Are Coming In</h4>
+            <pre><code># In Splunk Search bar:
+index=main source="pfsense"
+
+# Should see firewall logs streaming in
+# Generate traffic from Windows/Kali to create logs</code></pre>
+
+            <h4>Step 6: Create Your First Dashboard</h4>
+            <pre><code># Search query:
+index=main source="pfsense" 
+| stats count by action
+
+# Save As → Dashboard Panel
+# Title: "Firewall Actions - Allow vs Block"
+# Visualization: Pie Chart</code></pre>
+
+            <h3>🖥️ Option B: Install ELK Stack (Advanced, More Control)</h3>
+
+            <h4>Step 1: Install Elasticsearch</h4>
+            <pre><code># Import GPG key:
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+
+# Add repository:
+echo "deb https://artifacts.elastic.co/packages/8.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-8.x.list
+
+# Install:
+sudo apt update
+sudo apt install elasticsearch -y
+
+# Start service:
+sudo systemctl start elasticsearch
+sudo systemctl enable elasticsearch
+
+# Test:
+curl -X GET "localhost:9200/"</code></pre>
+
+            <h4>Step 2: Install Logstash</h4>
+            <pre><code>sudo apt install logstash -y
+
+# Create pfSense config:
+sudo nano /etc/logstash/conf.d/pfsense.conf</code></pre>
+
+            <p>Paste this configuration:</p>
+            <pre><code>input {
+  udp {
+    port => 514
+    type => "pfsense"
+  }
+}
+
+filter {
+  if [type] == "pfsense" {
+    grok {
+      match => { "message" => "%{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} %{DATA:program}: %{GREEDYDATA:message}" }
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["localhost:9200"]
+    index => "pfsense-%{+YYYY.MM.dd}"
+  }
+}</code></pre>
+
+            <pre><code># Start Logstash:
+sudo systemctl start logstash
+sudo systemctl enable logstash</code></pre>
+
+            <h4>Step 3: Install Kibana</h4>
+            <pre><code>sudo apt install kibana -y
+
+# Configure:
+sudo nano /etc/kibana/kibana.yml
+
+# Uncomment/set:
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://localhost:9200"]
+
+# Start:
+sudo systemctl start kibana
+sudo systemctl enable kibana</code></pre>
+
+            <h4>Step 4: Access Kibana</h4>
+            <pre><code># Browser:
+http://192.168.1.50:5601
+
+# Create index pattern:
+Management → Index Patterns → Create
+Pattern: pfsense-*
+Time field: @timestamp</code></pre>
+
+            <h4>Step 5: Create Dashboard in Kibana</h4>
+            <pre><code>Dashboard → Create Dashboard → Add Panel
+
+Visualization Type: Pie Chart
+Field: action.keyword
+Split Slices: Terms aggregation
+
+Save → "Firewall Allow vs Block"</code></pre>
+
+            <div class="deliverable">
+                <strong>📦 Day 3 Deliverable:</strong> Live log stream from pfSense → SIEM (Splunk or ELK) with searchable events and at least 1 dashboard showing firewall activity.
+            </div>
+
+            <h3>✅ Day 3 Checkpoint Quiz</h3>
+            <ul>
+                <li>What is Syslog and what port does it use?</li>
+                <li>What's the difference between Splunk and ELK?</li>
+                <li>Why use UDP for syslog instead of TCP?</li>
+                <li>What is an index pattern in Kibana?</li>
+            </ul>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-card">
+            <h2>Day 4: Attack Simulation + Detection</h2>
+            <p class="timeline">⏱️ Estimated Time: 3 - 4 hours</p>
+
+            <h3>🎓 What You'll Learn</h3>
+            <ul>
+                <li>Simulate realistic attacks from Kali</li>
+                <li>Analyze logs to detect anomalies</li>
+                <li>Write detection queries (SPL for Splunk / KQL for ELK)</li>
+                <li>Identify malicious IPs and patterns</li>
+                <li>Create alerts for suspicious activity</li>
+            </ul>
+
+            <h3>⚔️ Attack Scenario 1: Port Scanning (Reconnaissance)</h3>
+
+            <h4>Execute Attack from Kali:</h4>
+            <pre><code># Full TCP SYN scan:
+sudo nmap -sS -p- 192.168.1.100 -T4
+
+# Aggressive scan with OS detection:
+sudo nmap -A 192.168.1.100
+
+# Stealthy scan (slow):
+sudo nmap -sS -T2 192.168.1.100</code></pre>
+
+            <h4>Detection in Splunk:</h4>
+            <pre><code># Search for multiple connection attempts from same source:
+index=main source="pfsense" 
+| stats count by src_ip dest_port 
+| where count > 50
+| sort - count</code></pre>
+
+            <h4>Detection in ELK/Kibana:</h4>
+            <pre><code># Kibana Discover search:
+source_ip: * AND destination_port: *
+
+# Aggregation:
+Terms on source_ip.keyword
+Count > 50</code></pre>
+
+            <div class="success">
+                <strong>✅ What to Look For:</strong> Single IP hitting 50+ different ports in short time = Port Scan
+            </div>
+
+            <h3>⚔️ Attack Scenario 2: Brute Force SSH</h3>
+
+            <h4>Execute Attack from Kali:</h4>
+            <pre><code># First, allow SSH temporarily on pfSense for this test
+
+# Install Hydra:
+sudo apt install hydra -y
+
+# Create password list:
+echo -e "password\nadmin\n123456\npassword123" > passwords.txt
+
+# Brute force:
+hydra -l admin -P passwords.txt ssh://192.168.1.100</code></pre>
+
+            <h4>Detection in Splunk:</h4>
+            <pre><code>index=main source="pfsense" dest_port=22 
+| stats count by src_ip 
+| where count > 10
+| eval attack_type="SSH Brute Force"</code></pre>
+
+            <h4>Create Alert in Splunk:</h4>
+            <pre><code>Settings → Searches, Reports, and Alerts → New Alert
+
+Search: (paste above query)
+Alert Type: Real-time
+Trigger: Number of results > 10
+Actions: Send email / Log event
+
+Save</code></pre>
+
+            <h3>⚔️ Attack Scenario 3: DDoS Simulation (Ping Flood)</h3>
+
+            <h4>Execute Attack from Kali:</h4>
+            <pre><code># ICMP flood:
+sudo hping3 -1 --flood 192.168.1.100
+
+# SYN flood:
+sudo hping3 -S --flood -p 80 192.168.1.100</code></pre>
+
+            <h4>Detection in Splunk:</h4>
+            <pre><code>index=main source="pfsense" protocol=ICMP 
+| timechart span=1m count by src_ip
+| where count > 1000</code></pre>
+
+            <div class="warning">
+                <strong>⚠️ Warning:</strong> Run DDoS tests in isolated lab only! This will impact your VM performance.
+            </div>
+
+            <h3>🔍 Advanced Log Analysis Queries</h3>
+
+            <h4>Splunk: Top Blocked IPs</h4>
+            <pre><code>index=main source="pfsense" action=block 
+| stats count by src_ip 
+| sort - count 
+| head 20</code></pre>
+
+            <h4>Splunk: Firewall Rule Hit Count</h4>
+            <pre><code>index=main source="pfsense" 
+| stats count by rule_name 
+| sort - count</code></pre>
+
+            <h4>Splunk: Geographic Analysis (Requires IP Geolocation)</h4>
+            <pre><code>index=main source="pfsense" 
+| iplocation src_ip 
+| stats count by Country 
+| geom geo_countries featureIdField=Country</code></pre>
+
+            <h4>Splunk: Timeline of Attack</h4>
+            <pre><code>index=main source="pfsense" src_ip="<malicious_ip>" 
+| timechart span=1m count by dest_port</code></pre>
+
+            <h4>ELK/Kibana: Failed Connection Attempts</h4>
+            <pre><code>action: "block" AND source_ip: *
+# Visualize as bar chart over time</code></pre>
+
+            <h3>📊 Create Detection Dashboard</h3>
+
+            <h4>Panel 1: Real-time Blocked Connections</h4>
+            <pre><code>index=main source="pfsense" action=block 
+| timechart span=5m count</code></pre>
+
+            <h4>Panel 2: Top Attacking IPs</h4>
+            <pre><code>index=main source="pfsense" action=block 
+| stats count by src_ip 
+| sort - count 
+| head 10</code></pre>
+
+            <h4>Panel 3: Attack Types Distribution</h4>
+            <pre><code>index=main source="pfsense" 
+| eval attack_type=case(
+    dest_port=22, "SSH Brute Force",
+    dest_port=3389, "RDP Attack",
+    dest_port=80 OR dest_port=443, "Web Attack",
+    1=1, "Other"
+  )
+| stats count by attack_type</code></pre>
+
+            <h4>Panel 4: Geographic Heatmap</h4>
+            <pre><code>index=main source="pfsense" action=block
+| iplocation src_ip
+| geostats count by Country</code></pre>
+
+            <div class="deliverable">
+                <strong>📦 Day 4 Deliverable:</strong> 3 simulated attacks with evidence from SIEM logs, 4+ detection queries, and 1 comprehensive SOC dashboard.
+            </div>
+
+            <h3>✅ Day 4 Checkpoint Quiz</h3>
+            <ul>
+                <li>What are the signs of a port scan in logs?</li>
+                <li>How do you differentiate between brute force and normal failed logins?</li>
+                <li>What is the SPL command to aggregate data?</li>
+                <li>Why is time-based analysis important for attack detection?</li>
+            </ul>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-card">
+            <h2>Day 5: Automated Response + SOC Workflow</h2>
+            <p class="timeline">⏱️ Estimated Time: 3 - 4 hours</p>
+
+            <h3>🎓 What You'll Learn</h3>
+            <ul>
+                <li>Auto-block IPs based on log events</li>
+                <li>Set up geographic blocking (country-based)</li>
+                <li>Create SOC incident response workflow</li>
+                <li>Document your setup for portfolio</li>
+                <li>Prepare for SOC analyst interviews</li>
+            </ul>
+
+            <h3>🤖 Step 1: Install pfBlockerNG (30 minutes)</h3>
+            <pre><code>System → Package Manager → Available Packages
+
+Search: pfBlockerNG
+Install → Confirm
+
+Wait for installation to complete</code></pre>
+
+            <h3>🌍 Step 2: Configure Geographic Blocking (45 minutes)</h3>
+            <pre><code>Firewall → pfBlockerNG → IP → GeoIP
+
+MaxMind License Key Configuration:
+1. Create free account at: https://www.maxmind.com/en/geolite2/signup
+2. Generate license key
+3. Paste key in pfBlockerNG settings
+
+GeoIP Database: Download
+
+Select Countries to Block:
+☑️ Russia (RU)
+☑️ China (CN)
+☑️ North Korea (KP)
+☑️ Iran (IR)
+
+Action: Deny Outbound
+List Action: Deny Both
+
+Save → Update</code></pre>
+
+            <h4>Test Geographic Blocking:</h4>
+            <pre><code># From Kali, try to ping a Russian IP:
+ping 5.255.255.70
+
+# Should timeout
+
+# Check pfBlockerNG logs:
+Firewall → pfBlockerNG → Reports
+# Should see blocked connections from/to blocked countries</code></pre>
+
+            <h3>🚫 Step 3: Auto-Block Malicious IPs (Threat Feeds) (45 minutes)</h3>
+            <pre><code>Firewall → pfBlockerNG → IP → IPv4
+
+Add New
+
+Source Name: Spamhaus_DROP
+Description: Spamhaus DROP List (known malicious IPs)
+Format: Auto
+URL: https://www.spamhaus.org/drop/drop.txt
+Update Frequency: Daily
+Action: Deny Both
+
+Save
+
+Add Another:
+
+Source Name: EmergingThreats
+URL: https://rules.emergingthreats.net/fwrules/emerging-Block-IPs.txt
+Update Frequency: Daily
+Action: Deny Both
+
+Save → Update</code></pre>
+
+            <h3>⚙️ Step 4: Automated Blocking Based on SIEM Alerts (Advanced)</h3>
+
+            <h4>Create Python Script to Monitor Splunk and Auto-Block:</h4>
+            <pre><code># On Kali, create script:
+nano /home/kali/soc-autoblock.py</code></pre>
+
+            <p>Paste this code:</p>
+            <pre><code>#!/usr/bin/env python3
+import requests
+import time
+
+SPLUNK_HOST = "192.168.1.50"
+SPLUNK_PORT = "8089"
+SPLUNK_USER = "admin"
+SPLUNK_PASS = "your_password"
+PFSENSE_HOST = "192.168.1.1"
+PFSENSE_USER = "admin"
+PFSENSE_PASS = "your_password"
+
+# Query Splunk for IPs with >100 failed attempts
+search_query = 'search index=main source="pfsense" action=block | stats count by src_ip | where count > 100'
+
+def get_malicious_ips():
+    url = f"https://{SPLUNK_HOST}:{SPLUNK_PORT}/services/search/jobs"
+    data = {"search": search_query, "output_mode": "json"}
+    response = requests.post(url, auth=(SPLUNK_USER, SPLUNK_PASS), data=data, verify=False)
+    # Parse response and extract IPs
+    # (Full implementation requires Splunk SDK)
+    return ["192.168.1.200", "10.0.0.50"]  # Example
+
+def block_ip_pfsense(ip):
+    # Use pfSense API to add IP to block list
+    print(f"[+] Blocking {ip} on pfSense")
+    # Implementation requires pfSense API package
+
+if __name__ == "__main__":
+    print("[*] SOC Auto-Block Script Started")
+    while True:
+        malicious_ips = get_malicious_ips()
+        for ip in malicious_ips:
+            block_ip_pfsense(ip)
+        time.sleep(300)  # Check every 5 minutes</code></pre>
+
+            <div class="warning">
+                <strong>⚠️ Note:</strong> Full automation requires Splunk SDK and pfSense API. This is a conceptual example for learning.
+            </div>
+
+            <h3>📋 Step 5: Create SOC Incident Response Workflow (60 minutes)</h3>
+
+            <h4>SOC Analyst Daily Workflow Checklist:</h4>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Task</th>
+                    <th>Tools</th>
+                </tr>
+                <tr>
+                    <td>09:00</td>
+                    <td>Review overnight alerts in SIEM</td>
+                    <td>Splunk Dashboard</td>
+                </tr>
+                <tr>
+                    <td>09:30</td>
+                    <td>Check firewall logs for anomalies</td>
+                    <td>pfSense Status Logs</td>
+                </tr>
+                <tr>
+                    <td>10:00</td>
+                    <td>Investigate flagged IPs (WHOIS, VirusTotal)</td>
+                    <td>VirusTotal, AbuseIPDB</td>
+                </tr>
+                <tr>
+                    <td>11:00</td>
+                    <td>Update block lists and threat feeds</td>
+                    <td>pfBlockerNG</td>
+                </tr>
+                <tr>
+                    <td>14:00</td>
+                    <td>Threat hunting (proactive search)</td>
+                    <td>Splunk SPL queries</td>
+                </tr>
+                <tr>
+                    <td>16:00</td>
+                    <td>Update incident tickets and documentation</td>
+                    <td>Ticketing system (Jira/ServiceNow)</td>
+                </tr>
+                <tr>
+                    <td>17:00</td>
+                    <td>Review and refine firewall rules</td>
+                    <td>pfSense Rules</td>
+                </tr>
+            </table>
+
+            <h4>Incident Response Playbook:</h4>
+            <pre><code>**STEP 1: DETECTION**
+- Alert triggers in SIEM
+- Log review shows suspicious activity
+
+**STEP 2: VALIDATION**
+- Confirm it's not false positive
+- Check IP reputation (VirusTotal, AbuseIPDB)
+- Analyze source and destination
+
+**STEP 3: CONTAINMENT**
+- Block malicious IP on firewall
+- Isolate affected systems if needed
+- Preserve evidence (save logs)
+
+**STEP 4: ERADICATION**
+- Remove malware if present
+- Close exploited vulnerabilities
+- Reset compromised credentials
+
+**STEP 5: RECOVERY**
+- Restore systems to normal operation
+- Monitor for re-infection
+
+**STEP 6: DOCUMENTATION**
+- Write incident report
+- Update threat intelligence
+- Improve detection rules</code></pre>
+
+            <h3>📝 Step 6: Create Portfolio Documentation (90 minutes)</h3>
+
+            <h4>Create a README.md for your GitHub:</h4>
+            <pre><code># SOC Analyst Home Lab Project
+
+## Overview
+Built a complete SOC environment to develop real-world security operations skills.
+
+## Architecture
+- **Firewall:** pfSense (2 NICs - WAN/LAN)
+- **SIEM:** Splunk Enterprise Free
+- **Attack Machine:** Kali Linux
+- **Target:** Windows 11
+
+## Skills Demonstrated
+✅ Firewall configuration and rule management
+✅ Centralized log collection and analysis
+✅ Threat detection using SIEM
+✅ Incident response and containment
+✅ Automated blocking with threat feeds
+✅ Geographic and IP-based filtering
+
+## Key Achievements
+- Configured 20+ firewall rules for production scenarios
+- Detected and analyzed 3 simulated attacks
+- Created 5+ SIEM dashboards for threat visibility
+- Implemented automated IP blocking
+- Blocked malicious traffic from 4 countries
+
+## Attack Simulations
+1. **Port Scanning** - Detected using Splunk aggregation
+2. **SSH Brute Force** - Alerted on 10+ failed attempts
+3. **DDoS (ICMP Flood)** - Rate limited and blocked
+
+## Tools & Technologies
+pfSense | Splunk | Kali Linux | Nmap | Hydra | Wireshark
+
+## Screenshots
+(Add screenshots of your dashboard, firewall rules, detected attacks)
+
+## What I Learned
+- Real SOC workflows and incident response
+- How to correlate logs across systems
+- Proactive threat hunting techniques
+- Balancing security with usability</code></pre>
+
+            <h3>🎯 Interview Preparation: Questions You Can Answer Now</h3>
+
+            <table>
+                <tr>
+                    <th>Interview Question</th>
+                    <th>Your Answer</th>
+                </tr>
+                <tr>
+                    <td>Explain your experience with firewalls</td>
+                    <td>I've configured pfSense in a lab environment, created 20+ rules for different scenarios including geo-blocking, threat feed integration, and automated responses.</td>
+                </tr>
+                <tr>
+                    <td>How do you detect a port scan?</td>
+                    <td>I aggregate firewall logs by source IP and destination port. A single IP hitting 50+ ports in a short time indicates reconnaissance.</td>
+                </tr>
+                <tr>
+                    <td>What is your incident response process?</td>
+                    <td>Detection → Validation → Containment → Eradication → Recovery → Documentation. I follow a structured playbook to ensure nothing is missed.</td>
+                </tr>
+                <tr>
+                    <td>Experience with SIEM tools?</td>
+                    <td>I use Splunk to collect firewall logs, create dashboards, write SPL queries for threat hunting, and set up real-time alerts.</td>
+                </tr>
+                <tr>
+                    <td>How do you stay updated on threats?</td>
+                    <td>I integrate threat feeds like Spamhaus and EmergingThreats into my firewall and regularly check logs for IOCs (Indicators of Compromise).</td>
+                </tr>
+            </table>
+
+            <div class="deliverable">
+                <strong>📦 Day 5 Deliverable:</strong> Automated blocking system with geo-blocking + threat feeds, SOC workflow checklist, incident response playbook, and portfolio-ready documentation.
+            </div>
+
+            <h3>✅ Day 5 Checkpoint Quiz</h3>
+            <ul>
+                <li>What is pfBlockerNG and why use it?</li>
+                <li>Name 3 threat intelligence feeds</li>
+                <li>What are the 6 steps of incident response?</li>
+                <li>How do you validate if an alert is a true positive?</li>
+            </ul>
+        </div>
+
+        <!-- FINAL SECTION -->
+        <h2>🎓 Final Certification: You're SOC Ready</h2>
+
+        <div class="success">
+            <h3>✅ Skills Mastered:</h3>
+            <ul>
+                <li>Enterprise firewall deployment and management</li>
+                <li>Advanced rule configuration for real-world scenarios</li>
+                <li>Centralized log collection using SIEM</li>
+                <li>Attack detection and log analysis</li>
+                <li>Automated threat response</li>
+                <li>SOC workflows and incident handling</li>
+            </ul>
+        </div>
+
+        <h3>📚 Next Steps to Level Up:</h3>
+        <ul>
+            <li>Study for <span class="highlight">CompTIA Security+</span> certification</li>
+            <li>Learn <span class="highlight">SIEM query languages</span> (SPL, KQL) deeply</li>
+            <li>Practice on <span class="highlight">Blue Team Labs Online</span></li>
+            <li>Set up <span class="highlight">IDS/IPS</span> (Snort, Suricata)</li>
+            <li>Learn <span class="highlight">threat hunting</span> methodologies</li>
+            <li>Get hands-on with <span class="highlight">SOAR platforms</span> (Shuffle, TheHive)</li>
+        </ul>
+
+        <h3>🔗 Useful Resources:</h3>
+        <table>
+            <tr>
+                <th>Resource</th>
+                <th>Link</th>
+            </tr>
+            <tr>
+                <td>pfSense Documentation</td>
+                <td>https://docs.netgate.com/pfsense/</td>
+            </tr>
+            <tr>
+                <td>Splunk Free Training</td>
+                <td>https://www.splunk.com/en_us/training.html</td>
+            </tr>
+            <tr>
+                <td>Blue Team Labs Online</td>
+                <td>https://blueteamlabs.online/</td>
+            </tr>
+            <tr>
+                <td>AbuseIPDB (IP Reputation)</td>
+                <td>https://www.abuseipdb.com/</td>
+            </tr>
+            <tr>
+                <td>VirusTotal</td>
+                <td>https://www.virustotal.com/</td>
+            </tr>
+            <tr>
+                <td>MITRE ATT&CK Framework</td>
+                <td>https://attack.mitre.org/</td>
+            </tr>
+        </table>
+
+        <div class="goal-box">
+            <h3>💼 You're Now Interview-Ready For:</h3>
+            <ul>
+                <li>SOC Analyst Level 1</li>
+                <li>Security Operations Analyst</li>
+                <li>Incident Response Analyst (Junior)</li>
+                <li>Network Security Analyst</li>
+                <li>Cybersecurity Analyst</li>
+            </ul>
+        </div>
+
+        <p style="text-align: center; font-size: 1.5em; color: #00ffff; margin-top: 50px; font-weight: bold;">
+            🚀 Good luck, loki! You've got this.
+        </p>
+
+        <p style="text-align: center; color: #ffffff; margin-top: 20px; font-weight: bold;">
+            — Shelly
+        </p>
+    </div>
+</body>
+</html>
