@@ -21,6 +21,7 @@ More projects will be added over time. Stay tuned.
 
 ## Links
 
-- [projects.saksham.bio](https://projects.saksham.bio)
 - [saksham.info.np](https://saksham.info.np)
 - [sakshamsharma.com.np](https://sakshamsharma.com.np) 
+- [blogs.sakshamsharma.com.np](https://blogs.sakshamsharma.com.np)
+- [lokii.tech](https://lokii.tech)

@@ -3,318 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSecProjects — Home</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-primary:    #0a0e17;
-      --bg-secondary:  #111827;
-      --bg-tertiary:   #1a2035;
-      --bg-card:       #141a2a;
-      --border:        #1e2a40;
-      --text-primary:  #e0e6ed;
-      --text-secondary:#a0aec0;
-      --accent-cyan:   #00e5ff;
-      --accent-purple: #b388ff;
-      --accent-red:    #ff4c6a;
-      --accent-yellow: #ffd600;
-      --accent-green:  #00e676;
-      --shadow:        0 4px 24px rgba(0,0,0,0.5);
-      --radius:        14px;
-      --font-sans:     'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono:     'JetBrains Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
-      --transition:    0.3s ease;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-sans);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    ::selection {
-      background: var(--accent-cyan);
-      color: #000;
-    }
-
-    a { color: var(--accent-cyan); text-decoration: none; transition: color var(--transition); }
-    a:hover { color: var(--accent-purple); }
-
-    /* ===== HERO ===== */
-    .hero {
-      text-align: center;
-      padding: 100px 32px 60px;
-      background: linear-gradient(180deg, #0d142088 0%, transparent 100%);
-    }
-
-    .hero h1 {
-      font-size: clamp(2.8rem, 8vw, 4.5rem);
-      font-weight: 900;
-      letter-spacing: -1.5px;
-      background: linear-gradient(135deg, #00e5ff, #b388ff 40%, #ff4c6a 70%, #ffd600);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 0 30px rgba(0,229,255,0.25));
-    }
-
-    .hero .tagline {
-      color: var(--text-secondary);
-      font-size: 1.25rem;
-      max-width: 600px;
-      margin: 0 auto 28px;
-      line-height: 1.7;
-    }
-
-    .hero .meta {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero .meta a {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--accent-cyan);
-      padding: 10px 22px;
-      border-radius: 24px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(0,229,255,0.1);
-      transition: all var(--transition);
-    }
-
-    .hero .meta a:hover {
-      background: rgba(0,229,255,0.1);
-      border-color: #fff;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(0,229,255,0.25);
-    }
-
-    /* ===== PROJECTS GRID ===== */
-    .projects-section {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 28px 120px;
-      width: 100%;
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 32px;
-      padding-bottom: 14px;
-      border-bottom: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-title span {
-      color: var(--accent-cyan);
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-    }
-
-    .project-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px 28px;
-      transition: all var(--transition);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-
-    .project-card:hover {
-      border-color: var(--accent-cyan);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow), 0 0 30px rgba(0,229,255,0.08);
-    }
-
-    .project-card:hover::before {
-      opacity: 1;
-    }
-
-    .card-icon {
-      font-size: 2.4rem;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .card-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-
-    .card-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      flex: 1;
-    }
-
-    .card-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .tag {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-    }
-
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--accent-cyan);
-      transition: all var(--transition);
-    }
-
-    .card-link:hover {
-      color: #fff;
-      gap: 10px;
-    }
-
-    .card-link .arrow {
-      transition: transform var(--transition);
-    }
-
-    .card-link:hover .arrow {
-      transform: translateX(3px);
-    }
-
-    /* ===== COMING SOON PLACEHOLDER ===== */
-    .project-card.coming-soon {
-      border-style: dashed;
-      opacity: 0.5;
-    }
-
-    .project-card.coming-soon:hover {
-      transform: none;
-      box-shadow: none;
-      border-color: var(--border);
-    }
-
-    .project-card.coming-soon::before {
-      display: none;
-    }
-
-    /* ===== FOOTER ===== */
-    .footer {
-      text-align: center;
-      padding: 32px;
-      border-top: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: auto;
-    }
-
-    .footer a {
-      color: var(--accent-cyan);
-      font-weight: 600;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 600px) {
-      .hero { padding: 60px 20px 40px; }
-      .projects-section { padding: 0 16px 80px; }
-      .project-card { padding: 24px 20px; }
-    }
-  </style>
+  <meta name="description" content="CSecProjects is a cybersecurity and IT learning hub by Saksham Sharma for labs, recon playbooks, packet analysis notes, SOC workflows, incident response practice, and project experiments.">
+  <meta name="author" content="Saksham Sharma">
+  <meta name="keywords" content="Saksham Sharma, cybersecurity, IT auditor, SOC analyst, incident response, packet analysis, Wireshark, Nmap, network security, log analysis">
+  <meta name="application-name" content="CSecProjects">
+  <meta name="apple-mobile-web-app-title" content="CSecProjects">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-TileColor" content="#0d1117">
+  <meta property="og:title" content="CSecProjects">
+  <meta property="og:description" content="A learning hub for cybersecurity labs, recon playbooks, packet analysis notes, SOC workflows, incident response practice, and project experiments.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://saksham.info.np">
+  <meta property="og:image" content="https://saksham.info.np/android-chrome-512x512.png">
+  <meta property="og:site_name" content="CSecProjects">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CSecProjects">
+  <meta name="twitter:description" content="Cybersecurity and IT learning hub for labs, recon, packet analysis, SOC practice, incident response, and project experiments.">
+  <meta name="twitter:image" content="https://saksham.info.np/android-chrome-512x512.png">
+  <title>Projects | CSecProjects</title>
+  <link rel="canonical" href="https://saksham.info.np">
+  <link rel="author" href="https://sakshamsharma.com.np">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
+<body class="site-shell">
+  <main>
+    <section class="landing-hero page" aria-labelledby="page-title">
+      <div class="hero-mark" aria-hidden="true"></div>
+      <h1 id="page-title" class="gradient-title">CSecProjects</h1>
+      <div class="title-rule" aria-hidden="true"></div>
+      <p class="hero-subtitle">cybersecurity projects, labs, and learning notes!</p>
+      <p class="hero-description">
+        A corner of the internet for hands-on labs, ideas, and reflections
+        on <span class="highlight-coral">Cybersecurity</span>, <span class="highlight-cyan">Networking</span>,
+        and <span class="highlight-gold">IT Auditing</span>. These are
+        personal musings by <strong class="highlight-coral">Saksham Sharma</strong>,
+        not intended for official references, just an honest glimpse into
+        what goes on inside a curious mind.
+      </p>
+      <nav class="social-links" aria-label="Main links">
+        <a class="social-link icon-link" href="https://github.com/UnExplainableFish52" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 16 16" role="img" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+          </svg>
+        </a>
+        <a class="social-link icon-link active-link" href="https://sakshamsharma.com.np" target="_blank" rel="noopener noreferrer" aria-label="sakcom">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/>
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3Z"/>
+          </svg>
+        </a>
+        <a class="social-link icon-link" href="https://saksham.info.np" target="_blank" rel="noopener noreferrer" aria-label="sakinfo">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/>
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3Z"/>
+          </svg>
+        </a>
+        <a class="social-link icon-link" href="https://blogs.sakshamsharma.com.np" target="_blank" rel="noopener noreferrer" aria-label="blogs">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 4h11a3 3 0 0 1 3 3v13H7a2 2 0 0 1-2-2V4Z"/>
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 20a2 2 0 0 1 0-4h12M8 8h7M8 12h6"/>
+          </svg>
+        </a>
+        <a class="social-link icon-link" href="https://lokii.tech" target="_blank" rel="noopener noreferrer" aria-label="lokii">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/>
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3c2.2 2.4 3.3 5.4 3.3 9S14.2 18.6 12 21c-2.2-2.4-3.3-5.4-3.3-9S9.8 5.4 12 3Z"/>
+          </svg>
+        </a>
+      </nav>
+    </section>
 
-  <!-- ============ HERO ============ -->
-  <header class="hero">
-    <h1>CyberSec PROJECTS</h1>
-    <p class="tagline">Cybersecurity playbooks, cheatsheets, and tools — built for learning and authorized engagements.</p>
-    <div class="meta">
-      <a href="https://github.com/UnExplainableFish52" target="_blank">👨‍💻 Built by: Loki</a>
-      <a href="https://sakshamsharma.com.np" target="_blank">🌐 sakshamsharma.com.np</a>
-      <a href="https://saksham.info.np" target="_blank">🌐 saksham.info.np</a>
-    </div>
-  </header>
-
-  <!-- ============ PROJECTS ============ -->
-  <main class="projects-section">
-    <h2 class="section-title"><span>📂</span> Projects</h2>
-
-    <div class="projects-grid">
-
-      <!-- Nmap Recon Playbook -->
-      <a href="nmap/nmap.html" class="project-card" style="text-decoration:none; color:inherit;">
-        <span class="card-icon">🛡️</span>
-        <h3 class="card-title">Nmap Recon Playbook</h3>
-        <p class="card-desc">A step-by-step, logic-driven guide for authorized network reconnaissance using Nmap — from host discovery to vulnerability scanning.</p>
-        <div class="card-tags">
-          <span class="tag">Nmap</span>
-          <span class="tag">Recon</span>
-          <span class="tag">Network</span>
-          <span class="tag">Cheatsheet</span>
+    <section class="content page" aria-labelledby="project-list-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">current archive</p>
+          <h2 id="project-list-title">Projects</h2>
         </div>
-        <span class="card-link">Open Playbook <span class="arrow">→</span></span>
-      </a>
-
-      <!-- Coming soon placeholder -->
-      <div class="project-card coming-soon">
-        <span class="card-icon">🔜</span>
-        <h3 class="card-title">More Coming Soon</h3>
-        <p class="card-desc">Additional cybersecurity playbooks and tools will be added here. Stay tuned.</p>
-        <div class="card-tags">
-          <span class="tag">TBD</span>
-        </div>
+        <p>labs / notes / reports / references</p>
       </div>
 
-    </div>
+      <div class="projects-grid">
+        <a class="project-card" href="nmap/nmap.html">
+          <div class="card-top">
+            <span class="card-kicker">playbook</span>
+            <span class="card-status">ready</span>
+          </div>
+          <h3 class="card-title">Nmap Recon Playbook</h3>
+          <p class="card-desc">
+            A logic-driven guide for authorized network reconnaissance with
+            Nmap: host discovery, port scanning, service detection, version
+            checks, NSE scripts, scope notes, and reporting habits.
+          </p>
+          <div class="tag-list" aria-label="Keywords">
+            <span class="tag">nmap</span>
+            <span class="tag">recon</span>
+            <span class="tag">network</span>
+            <span class="tag">scan</span>
+            <span class="tag">reporting</span>
+          </div>
+          <span class="card-link">
+            <span>Open playbook</span>
+            <span aria-hidden="true">-&gt;</span>
+          </span>
+        </a>
+
+        <a class="project-card" href="5dayproject.html">
+          <div class="card-top">
+            <span class="card-kicker">training plan</span>
+            <span class="card-status">reference</span>
+          </div>
+          <h3 class="card-title">SOC Analyst Firewall Mastery</h3>
+          <p class="card-desc">
+            A five-day SOC and firewall practice plan covering rules, logs,
+            traffic filtering, attack simulation, detection workflow, SIEM
+            setup, and incident response thinking.
+          </p>
+          <div class="tag-list" aria-label="Keywords">
+            <span class="tag">SOC</span>
+            <span class="tag">firewall</span>
+            <span class="tag">logs</span>
+            <span class="tag">SIEM</span>
+            <span class="tag">incident report</span>
+          </div>
+          <span class="card-link">
+            <span>Open plan</span>
+            <span aria-hidden="true">-&gt;</span>
+          </span>
+        </a>
+
+        <a class="project-card" href="pcapng-deduction/readme.md">
+          <div class="card-top">
+            <span class="card-kicker">analysis notes</span>
+            <span class="card-status">working</span>
+          </div>
+          <h3 class="card-title">PCAP Deduction / Packet Analysis Notes</h3>
+          <p class="card-desc">
+            Notes for processing PCAP and PCAPNG captures into useful incident
+            analysis: timeline, attacker and victim details, Wireshark findings,
+            targeted ports, protocols, open services, and prevention ideas.
+          </p>
+          <div class="tag-list" aria-label="Keywords">
+            <span class="tag">PCAP</span>
+            <span class="tag">PCAPNG</span>
+            <span class="tag">Wireshark</span>
+            <span class="tag">packet analysis</span>
+            <span class="tag">incident report</span>
+          </div>
+          <span class="card-link">
+            <span>Open notes</span>
+            <span aria-hidden="true">-&gt;</span>
+          </span>
+        </a>
+      </div>
+    </section>
   </main>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <p>🛡️ CSecProjects — Built by <a href="https://github.com/UnExplainableFish52" target="_blank">Loki</a></p>
+  <footer class="site-footer page">
+    <div class="footer-line"></div>
+    <div class="footer-inner">
+      <p>CSecProjects / learning archive</p>
+      <nav class="footer-links" aria-label="Footer links">
+        <a class="footer-icon-link" href="https://github.com/UnExplainableFish52" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 16 16" role="img" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+          </svg>
+        </a>
+        <a href="https://sakshamsharma.com.np" target="_blank" rel="noopener noreferrer">sakcom</a>
+        <a href="https://saksham.info.np" target="_blank" rel="noopener noreferrer">sakinfo</a>
+        <a href="https://blogs.sakshamsharma.com.np" target="_blank" rel="noopener noreferrer">blogs</a>
+        <a href="https://lokii.tech" target="_blank" rel="noopener noreferrer">lokii</a>
+      </nav>
+    </div>
   </footer>
-
 </body>
 </html>

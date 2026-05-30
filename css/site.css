@@ -1,0 +1,18 @@
+/* Homepage-specific hooks live here. Shared layout, hero, cards, and footer
+   styles are in global.css so new pages can import the same visual system. */
+
+.project-card:nth-child(2)::before {
+  background: var(--gold);
+}
+
+.project-card:nth-child(3)::before {
+  background: var(--blue);
+}
+
+.project-card:nth-child(2) .card-status {
+  color: var(--gold);
+}
+
+.project-card:nth-child(3) .card-status {
+  color: var(--blue);
+}

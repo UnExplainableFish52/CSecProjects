@@ -1,0 +1,74 @@
+{
+  "id": "/",
+  "name": "CSecProjects - Cybersecurity Project Archive",
+  "short_name": "CSecProjects",
+  "description": "A cybersecurity and IT learning hub by Saksham Sharma for labs, recon playbooks, packet analysis notes, SOC workflows, incident response practice, and project experiments.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0d1117",
+  "background_color": "#080b0f",
+  "categories": [
+    "education",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nmap Recon Playbook",
+      "short_name": "Nmap",
+      "description": "Open the Nmap reconnaissance playbook.",
+      "url": "/nmap/nmap.html",
+      "icons": [
+        {
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "SOC Analyst Firewall Mastery",
+      "short_name": "SOC Plan",
+      "description": "Open the SOC analyst firewall and log analysis plan.",
+      "url": "/5dayproject.html",
+      "icons": [
+        {
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "PCAP Deduction Notes",
+      "short_name": "PCAP",
+      "description": "Open the packet analysis and incident deduction notes.",
+      "url": "/pcapng-deduction/readme.md",
+      "icons": [
+        {
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
